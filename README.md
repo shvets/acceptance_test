@@ -1,4 +1,4 @@
-# AcceptanceTestsSupport - This gem simplifies congiguration and run of acceptance tests
+# AcceptanceTest - This gem simplifies configuration and run of acceptance tests
 
 ## Installation
 
@@ -16,37 +16,22 @@ $ bundle
 
 ## Usage
 
-Your spec helper class:
+# Without selenium configuration
+
+Your spec class:
 
 ```ruby
 require 'acceptance_test'
 
-selenium_config_file = "spec/features/selenium.yml"
-selenium_config_name = 'test'
+describe 'Google Search' do
 
-selenium_config = AcceptanceTestsSupport.load_selenium_config selenium_config_file, selenium_config_name
-
-@@support = AcceptanceTestsSupport.new ".", selenium_config
-```
-
-and your spec:
-
-```ruby
-require File.expand_path(File.dirname(__FILE__) + '/features_spec_helper')
-
-feature 'Google Search', %q{
-    As a user of this service
-    I want to enter a search text and get the relevant search results
-    so that I can find the right answer
-  } do
-
-  include_context "AcceptanceTest", @@support
+  include_context "AcceptanceTest"
 
   before :all do
-    @@support.app_host = "http://www.google.com"
+    acceptance_test.app_host = "http://www.google.com"
   end
 
-  scenario "uses selenium driver", driver: :selenium, exclude: false do
+  it "uses selenium driver", driver: :selenium, exclude: false do
     visit('/')
 
     fill_in "q", :with => "Capybara"
@@ -57,9 +42,31 @@ feature 'Google Search', %q{
 
     all(:xpath, "//li[@class='g']/h3/a").each { |a| puts a[:href] }
   end
-
 end
+```
 
+# With selenium configuration
+
+Your spec class:
+
+```ruby
+require 'acceptance_test'
+
+describe 'Google Search' do
+
+  include_context "AcceptanceTest"
+
+  before :all do
+    selenium_config_file = "spec/features/selenium.yml"
+    selenium_config_name = "test"
+
+    acceptance_test.load_selenium_config selenium_config_file, selenium_config_name
+  end
+
+  it "do something" do
+    # ...
+  end
+end
 ```
 
 ## Contributing
