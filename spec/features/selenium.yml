@@ -1,0 +1,15 @@
+development:
+  env: 'development'
+  webapp_url: 'http://localhost:3000'
+  selenium_host: 'localhost'
+  selenium_port: 4444
+  browser: 'firefox'
+  timeout_in_seconds: 40
+
+test:
+  env: 'test'
+  webapp_url: 'http://localhost:3000'
+  selenium_host: 'localhost'
+  selenium_port: 4444
+  browser: 'firefox'
+  timeout_in_seconds: 40

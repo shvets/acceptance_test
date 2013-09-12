@@ -1,0 +1,13 @@
+= Acceptance Tests Support Changelog
+
+== Version 1.0.0
+
+* Initial release.
+
+== Version 1.0.2
+
+* Refactoring code, adding support for selenium with firefox.
+
+== Version 1.0.3
+
+* Minor bug fixes.
