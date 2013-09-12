@@ -10,12 +10,12 @@ version = AcceptanceTest::VERSION
 project_name = File.basename(Dir.pwd)
 
 task :gen do
-  generator = GemspecDepsGen.new project_name
+  generator = GemspecDepsGen.new
 
   generator.generate_dependencies "spec", "#{project_name}.gemspec.erb", "#{project_name}.gemspec"
 end
 
-task :build do
+task :build => :gen do
   system "gem build #{project_name}.gemspec"
 end
 
