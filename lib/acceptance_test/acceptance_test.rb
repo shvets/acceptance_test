@@ -72,8 +72,12 @@ class AcceptanceTest
   end
 
   def configure
-    #require 'rspec/rails'
-    #require "capybara/rails"
+    run_server = (ENV['RUN_SERVER'] == "true")
+
+    if run_server and defined? Rails
+      require 'rspec/rails'
+      require "capybara/rails"
+    end
 
     #require 'rspec/autorun'
 
@@ -93,7 +97,7 @@ class AcceptanceTest
 
     Capybara.configure do |config|
       config.default_wait_time = ENV['WAIT_TIME'].to_i
-      config.run_server = (ENV['RUN_SERVER'] == "true")
+      config.run_server = run_server
 
       #config.always_include_port = false
       #config.server {|app, port| Capybara.run_default_server(app, port)}
