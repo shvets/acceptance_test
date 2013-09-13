@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RUBY_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="gem" name="Gem">
+      <configuration>
+        <option name="GEM_APP_ROOT_PATH" value="$MODULE_DIR$" />
+        <option name="GEM_APP_TEST_PATH" value="" />
+        <option name="GEM_APP_LIB_PATH" value="$MODULE_DIR$/lib" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="activesupport (v3.2.14, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.3.5, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="capybara (v2.1.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="capybara-firebug (v1.3.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="capybara-webkit (v1.0.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="childprocess (v0.3.9, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="cliver (v0.2.1, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="debugger-ruby_core_source (v1.2.3, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.2.4, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ffi (v1.9.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="file_utils (v1.0.7, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="gemcutter (v0.7.1, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="gemspec_deps_gen (v1.1.2, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="i18n (v0.6.5, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="json (v1.8.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="metaclass (v0.0.1, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mime-types (v1.25, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mini_portile (v0.5.1, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mocha (v0.14.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="multi_json (v1.8.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="nokogiri (v1.6.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="poltergeist (v1.4.1, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rack (v1.5.2, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rack-test (v0.6.2, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rake (v10.1.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec (v2.14.1, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-core (v2.14.5, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v2.14.2, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v2.14.3, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ruby-debug-base19x (v0.11.30.pre12, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ruby-debug-ide (v0.4.17, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubyzip (v0.9.9, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="selenium-webdriver (v2.35.1, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="websocket (v1.0.7, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="websocket-driver (v0.3.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="xpath (v2.0.0, RVM: ruby-1.9.3-p448 [acceptance_tests_support]) [gem]" level="application" />
+  </component>
+</module>
+
