@@ -9,7 +9,6 @@ class AcceptanceTest
 
   def initialize project_root="."
     @project_root = project_root
-    #@selenium_config = selenium_config
 
     @app_host = default_app_host
 
@@ -27,10 +26,14 @@ class AcceptanceTest
       select_driver driver
 
       if driver.to_s =~ /selenium/
-        puts "\nSelenium Configuration: #{@selenium_config[:name]}"
-        puts "Environment: #{@selenium_config[:env]}"
-        puts "Application: #{@selenium_config[:webapp_url]}"
-        puts "Selenium: #{@selenium_config[:selenium_host]}:#{@selenium_config[:selenium_port]}"
+        if @selenium_config.nil? or @selenium_config.size == 0
+          puts "Selenium configuration was not found."
+        else
+          puts "\nSelenium Configuration: #{@selenium_config[:name]}"
+          puts "Environment: #{@selenium_config[:env]}"
+          puts "Application: #{@selenium_config[:webapp_url]}"
+          puts "Selenium: #{@selenium_config[:selenium_host]}:#{@selenium_config[:selenium_port]}"
+        end
       end
     end
 
@@ -60,12 +63,11 @@ class AcceptanceTest
   private
 
   def default_app_host
-    "http://#{self.class.get_localhost}:3000"
+    "http://#{AcceptanceTestHelper.get_localhost}:3000"
   end
 
   def set_defaults
     ENV['APP_HOST'] ||= app_host
-    #ENV['DRIVER'] ||= "webkit"
     ENV['WAIT_TIME'] ||= "60"
   end
 
@@ -228,17 +230,6 @@ class AcceptanceTest
     screenshot_url = "#{project_url}/tmp/#{screenshot_name}"
 
     puts full_description + "\n Screenshot: #{screenshot_url}"
-  end
-
-  def self.get_localhost
-    orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true  # turn off reverse DNS resolution temporarily
-
-    UDPSocket.open do |s|
-      s.connect '192.168.1.1', 1
-      s.addr.last
-    end
-  ensure
-    Socket.do_not_reverse_lookup = orig
   end
 
 end
