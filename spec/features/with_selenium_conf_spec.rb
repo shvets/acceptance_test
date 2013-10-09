@@ -14,4 +14,13 @@ describe 'Google Search' do
     puts "Using driver: #{Capybara.current_driver}."
   end
 
+  it "uses selenium driver", driver: :selenium_remote do
+    visit('/')
+
+    fill_in "q", :with => "Capybara"
+
+    find("#gbqfbw button").click
+
+    all(:xpath, "//li[@class='g']/h3/a").each { |a| puts a[:href] }
+  end
 end

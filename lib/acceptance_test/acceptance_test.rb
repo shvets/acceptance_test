@@ -10,7 +10,7 @@ class AcceptanceTest
   def initialize project_root="."
     @project_root = project_root
 
-    @app_host = default_app_host
+    #@app_host = default_app_host
 
     set_defaults
 
@@ -25,15 +25,11 @@ class AcceptanceTest
 
       select_driver driver
 
-      if driver.to_s =~ /selenium/
-        if @selenium_config.nil? or @selenium_config.size == 0
-          puts "Selenium configuration was not found."
-        else
-          puts "\nSelenium Configuration: #{@selenium_config[:name]}"
-          puts "Environment: #{@selenium_config[:env]}"
-          puts "Application: #{@selenium_config[:webapp_url]}"
-          puts "Selenium: #{@selenium_config[:selenium_host]}:#{@selenium_config[:selenium_port]}"
-        end
+      if driver.to_s =~ /selenium/ and selenium_config_exist?
+        puts "\nSelenium Configuration: #{@selenium_config[:name]}"
+        puts "Environment: #{@selenium_config[:env]}"
+        puts "Application: #{@selenium_config[:webapp_url]}"
+        puts "Selenium: #{@selenium_config[:selenium_host]}:#{@selenium_config[:selenium_port]}"
       end
     end
 
@@ -181,16 +177,19 @@ class AcceptanceTest
   def select_driver driver
     if [:js, :javascript].include? driver
       Capybara.current_driver = Capybara.javascript_driver
-    elsif [:webkit, :selenium, :selenium_with_firebug, :selenium_chrome, :poltergeist].include? driver
+    elsif [:webkit, :poltergeist].include? driver
       Capybara.current_driver = driver
       Capybara.javascript_driver = driver
+    elsif [:selenium, :selenium, :selenium_with_firebug, :selenium_chrome].include? driver
+      if selenium_config_exist?
+        setup_driver_from_config driver
+      else
+        Capybara.current_driver = driver
+        Capybara.javascript_driver = driver
+      end
+
     elsif [:selenium_remote].include? driver
-      selenium_app_host = app_host_from_url(@selenium_config[:webapp_url])
-      setup_app_host selenium_app_host
-
-      Rails.env = @selenium_config[:env]
-
-      Capybara.current_driver = driver
+      setup_driver_from_config driver
     else
       Capybara.current_driver = Capybara.default_driver
     end
@@ -236,5 +235,19 @@ class AcceptanceTest
     puts full_description + "\n Screenshot: #{screenshot_url}"
   end
 
+  def selenium_config_exist?
+    not @selenium_config.nil? and @selenium_config.size > 0
+  end
+
+  def setup_driver_from_config driver
+    selenium_app_host = app_host_from_url(@selenium_config[:webapp_url])
+    #setup_app_host selenium_app_host
+    @app_host = selenium_app_host
+
+    Rails.env = @selenium_config[:env] if defined? Rails.env
+
+    Capybara.current_driver = driver
+    Capybara.javascript_driver = driver
+  end
 end
 

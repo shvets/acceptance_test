@@ -1,5 +1,4 @@
-shared_context "AcceptanceTest" do
-
+acceptance_test_lambda = lambda do
   attr_reader :acceptance_test
 
   before :all do
@@ -7,11 +6,19 @@ shared_context "AcceptanceTest" do
   end
 
   before do
-    @acceptance_test.before self
+    acceptance_test.before self
   end
 
   after do
-    @acceptance_test.after self
+    acceptance_test.after self
   end
-
 end
+
+shared_context "AcceptanceTest" do
+  self.define_singleton_method(:include_context, acceptance_test_lambda)
+
+  include_context
+end
+
+
+
