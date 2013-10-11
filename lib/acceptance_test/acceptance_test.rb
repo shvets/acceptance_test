@@ -10,7 +10,7 @@ class AcceptanceTest
   def initialize project_root="."
     @project_root = project_root
 
-    #@app_host = default_app_host
+    @app_host = default_app_host
 
     set_defaults
 
