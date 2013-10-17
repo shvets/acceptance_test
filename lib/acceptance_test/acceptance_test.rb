@@ -75,8 +75,6 @@ class AcceptanceTest
       require "capybara/rails"
     end
 
-    #require 'rspec/autorun'
-
     require "capybara"
     require "capybara/dsl"
     require 'capybara/rspec'
@@ -94,22 +92,7 @@ class AcceptanceTest
     Capybara.configure do |config|
       config.default_wait_time = ENV['WAIT_TIME'].to_i
       config.run_server = run_server
-
-      #config.always_include_port = false
-      #config.server {|app, port| Capybara.run_default_server(app, port)}
-      #config.default_selector = :css
-      #config.ignore_hidden_elements = false
-      #config.default_host = "http://www.example.com"
-      #config.automatic_reload = true
     end
-
-    #Capybara.configure do |config|
-    #  config.match = :one
-    #  config.exact_options = true
-    #  config.ignore_hidden_elements = true
-    #  config.visible_text_only = true
-    #end
-    #
   end
 
   def register_driver driver
@@ -224,7 +207,7 @@ class AcceptanceTest
     filename = File.basename(file_path)
 
     screenshot_name = "screenshot-#{filename}-#{line_number}.png"
-    screenshot_path = "#{@project_root.join("tmp")}/#{screenshot_name}"
+    screenshot_path = "#{@project_root}/tmp/#{screenshot_name}"
 
     page.save_screenshot(screenshot_path)
 
@@ -241,7 +224,6 @@ class AcceptanceTest
 
   def setup_driver_from_config driver
     selenium_app_host = app_host_from_url(@selenium_config[:webapp_url])
-    #setup_app_host selenium_app_host
     @app_host = selenium_app_host
 
     Rails.env = @selenium_config[:env] if defined? Rails.env
