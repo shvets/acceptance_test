@@ -25,7 +25,7 @@ class AcceptanceTest
 
       select_driver driver
 
-      if driver.to_s =~ /selenium/ and selenium_config_exist?
+      if selenium_driver?(driver) and selenium_config_exist?
         puts "\nSelenium Configuration: #{@selenium_config[:name]}"
         puts "Environment: #{@selenium_config[:env]}"
         puts "Application: #{@selenium_config[:webapp_url]}"
@@ -64,7 +64,7 @@ class AcceptanceTest
 
   def set_defaults
     ENV['APP_HOST'] ||= app_host
-    ENV['WAIT_TIME'] ||= "60"
+    ENV['WAIT_TIME'] ||= Capybara.default_wait_time.to_s
   end
 
   def configure
@@ -158,23 +158,24 @@ class AcceptanceTest
   end
 
   def select_driver driver
-    if [:js, :javascript].include? driver
-      Capybara.current_driver = Capybara.javascript_driver
-    elsif [:webkit, :poltergeist].include? driver
-      Capybara.current_driver = driver
-      Capybara.javascript_driver = driver
-    elsif [:selenium, :selenium, :selenium_with_firebug, :selenium_chrome].include? driver
-      if selenium_config_exist?
+    if selenium_driver?(driver)
+      if driver == :selenium_remote
         setup_driver_from_config driver
       else
+        if selenium_config_exist?
+          setup_driver_from_config driver
+        else
+          if Capybara.drivers[driver]
+            Capybara.current_driver = driver
+            Capybara.javascript_driver = driver
+          end
+        end
+      end
+    else
+      if Capybara.drivers[driver]
         Capybara.current_driver = driver
         Capybara.javascript_driver = driver
       end
-
-    elsif [:selenium_remote].include? driver
-      setup_driver_from_config driver
-    else
-      Capybara.current_driver = Capybara.default_driver
     end
   end
 
@@ -230,6 +231,10 @@ class AcceptanceTest
 
     Capybara.current_driver = driver
     Capybara.javascript_driver = driver
+  end
+
+  def selenium_driver? driver
+    driver.to_s =~ /selenium/
   end
 end
 

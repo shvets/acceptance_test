@@ -1,5 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/features_spec_helper')
 
+Capybara.default_wait_time = 5
+
 describe 'Google Search' do
   include_context "AcceptanceTest"
 
@@ -9,6 +11,7 @@ describe 'Google Search' do
 
   before do
     puts "Using driver: #{Capybara.current_driver}."
+    puts "Default wait time: #{Capybara.default_wait_time}."
   end
 
   it "uses selenium driver", driver: :selenium, exclude: false do

@@ -12,6 +12,7 @@ describe 'Google Search' do
 
   before do
     puts "Using driver: #{Capybara.current_driver}."
+    puts "Default wait time: #{Capybara.default_wait_time}."
   end
 
   it "uses selenium driver", driver: :selenium_remote do
