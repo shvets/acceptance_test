@@ -8,7 +8,7 @@ class AcceptanceTest
   attr_accessor :app_host
 
   def initialize project_root="."
-    @project_root = project_root
+    @project_root = File.expand_path(project_root.to_s)
 
     @app_host = default_app_host
 
