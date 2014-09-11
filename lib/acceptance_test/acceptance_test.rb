@@ -37,17 +37,19 @@ class AcceptanceTest
   end
 
   def after context
-    context.reset_session!
+    example = RSpec.current_example
 
-    if context.example.exception
+    if example.exception
       driver = driver(context)
 
       if driver and not [:webkit].include? driver
-        save_screenshot context.example, context.page
+        save_screenshot example, context.page
       end
     end
 
     Capybara.current_driver = Capybara.default_driver
+
+    context.reset_session!
   end
 
   def load_selenium_config file_name, config_name

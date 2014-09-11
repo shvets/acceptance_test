@@ -31,3 +31,7 @@
 == Version 1.0.7
 
 * Bug fix
+
+== Version 1.1.0
+
+* Switch to rspec3
