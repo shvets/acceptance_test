@@ -14,7 +14,7 @@ acceptance_test_lambda = lambda do
   end
 end
 
-shared_context "AcceptanceTest" do
+RSpec.shared_context "AcceptanceTest" do
   self.define_singleton_method(:include_context, acceptance_test_lambda)
 
   include_context
