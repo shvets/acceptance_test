@@ -28,8 +28,7 @@ class AcceptanceTest
       select_driver driver
 
       if acceptance_config_exist?
-        put  "\n"
-        puts "Acceptance Configuration: #{@acceptance_config[:name]}"
+        puts "\nAcceptance Configuration: #{@acceptance_config[:name]}"
         puts "Environment: #{@acceptance_config[:env]}"
         puts "Application: #{@acceptance_config[:webapp_url]}"
         puts "Selenium: #{@acceptance_config[:selenium_host]}:#{@acceptance_config[:selenium_port]}" if
