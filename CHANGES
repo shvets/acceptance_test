@@ -36,7 +36,10 @@
 
 * Switch to rspec3
 
-
 == Version 1.1.1
 
 * Bug fix
+
+== Version 1.1.2
+
+* Relaxing method calls
