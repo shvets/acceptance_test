@@ -7,10 +7,11 @@ require 'active_support/hash_with_indifferent_access'
 require 'acceptance_test/acceptance_test_helper'
 
 class AcceptanceTest
-  attr_accessor :app_host
+  attr_accessor :app_host, :project_root, :screenshot_dir
 
-  def initialize project_root="."
+  def initialize project_root, screenshot_dir
     @project_root = File.expand_path(project_root.to_s)
+    @screenshot_dir = File.expand_path(screenshot_dir.to_s)
 
     @app_host = default_app_host
 
@@ -39,12 +40,17 @@ class AcceptanceTest
     setup_app_host app_host
   end
 
-  def after page, example_exception=nil, metadata={}
-    if example_exception
+  def after page, exception=nil, metadata={}
+    if exception
       driver = driver(metadata)
 
       if driver and not [:webkit].include? driver
-        save_screenshot example, page
+        screenshot_maker = ScreenshotMaker.new screenshot_dir
+
+        screenshot_maker.make page, metadata
+
+        puts metadata[:full_description]
+        puts "Screenshot: #{screenshot_maker.screenshot_url(metadata)}"
       end
     end
 
@@ -79,7 +85,7 @@ class AcceptanceTest
     require "capybara"
     require "capybara/dsl"
 
-    # try to load capybara related rspec library
+    # try to load capybara-related rspec library
     begin
       require 'capybara/rspec'
     rescue
@@ -207,25 +213,6 @@ class AcceptanceTest
     uri = URI(url)
 
     "#{uri.scheme}://#{uri.host}:#{uri.port}"
-  end
-
-  def save_screenshot example, page
-    file_path = example.metadata[:file_path]
-    line_number = example.metadata[:line_number]
-    full_description = example.metadata[:full_description]
-
-    filename = File.basename(file_path)
-
-    screenshot_name = "screenshot-#{filename}-#{line_number}.png"
-    screenshot_path = "#{@project_root}/tmp/#{screenshot_name}"
-
-    page.save_screenshot(screenshot_path)
-
-    project_url = ENV['BUILD_URL'].nil? ? "file:///#{@project_root}" : "#{ENV['BUILD_URL']}../ws"
-
-    screenshot_url = "#{project_url}/tmp/#{screenshot_name}"
-
-    puts full_description + "\n Screenshot: #{screenshot_url}"
   end
 
   def acceptance_config_exist?
