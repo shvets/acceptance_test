@@ -19,7 +19,7 @@ task :build => :gen do
   system "gem build #{project_name}.gemspec"
 end
 
-task :install do
+task :install => :build do
   system "gem install #{project_name}-#{version}.gem"
 end
 

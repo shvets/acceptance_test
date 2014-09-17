@@ -1,1 +1,0 @@
-require 'acceptance_test'

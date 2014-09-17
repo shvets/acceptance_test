@@ -55,3 +55,8 @@
 == Version 1.1.5
 
 * Bug fix
+
+== Version 1.2.0
+
+* Refactor code to make it simple
+* Update dependencies

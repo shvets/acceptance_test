@@ -1,13 +1,13 @@
 require 'uri'
 require 'capybara'
 
-require 'yaml'
-require 'active_support/hash_with_indifferent_access'
+require 'active_support/core_ext/hash'
 
 require 'acceptance_test/acceptance_test_helper'
 
 class AcceptanceTest
-  attr_accessor :app_host, :project_root, :screenshot_dir
+  attr_reader :acceptance_config, :project_root, :screenshot_dir
+  attr_accessor :app_host
 
   def initialize project_root, screenshot_dir
     @project_root = File.expand_path(project_root.to_s)
@@ -20,6 +20,25 @@ class AcceptanceTest
     configure
   end
 
+  def acceptance_config= acceptance_config
+    @acceptance_config = acceptance_config.kind_of?(HashWithIndifferentAccess) ?
+         acceptance_config : HashWithIndifferentAccess.new(acceptance_config)
+  end
+
+  def driver metadata
+    driver = ENV['DRIVER'].nil? ? nil : ENV['DRIVER'].to_sym
+
+    driver = metadata[:driver] if driver.nil?
+
+    driver = :webkit if driver.nil?
+
+    driver
+  end
+
+  def selenium_driver? driver
+    driver.to_s =~ /selenium/
+  end
+
   def before metadata={}
     driver = driver(metadata)
 
@@ -27,14 +46,6 @@ class AcceptanceTest
       register_driver driver
 
       select_driver driver
-
-      if acceptance_config_exist?
-        puts "\nAcceptance Configuration: #{@acceptance_config[:name]}"
-        puts "Environment: #{@acceptance_config[:env]}"
-        puts "Application: #{@acceptance_config[:webapp_url]}"
-        puts "Selenium: #{@acceptance_config[:selenium_host]}:#{@acceptance_config[:selenium_port]}" if
-            selenium_driver?(driver)
-      end
     end
 
     setup_app_host app_host
@@ -55,12 +66,6 @@ class AcceptanceTest
     end
 
     Capybara.current_driver = Capybara.default_driver
-  end
-
-  def load_acceptance_config file_name, config_name
-    @acceptance_config = HashWithIndifferentAccess.new YAML.load_file(file_name)[config_name]
-
-    @acceptance_config[:name] = config_name
   end
 
   private
@@ -146,7 +151,7 @@ class AcceptanceTest
 
       when :selenium_remote
         unless Capybara.drivers[:selenium_remote]
-          url = "http://#{@acceptance_config[:selenium_host]}:#{@acceptance_config[:selenium_port]}/wd/hub"
+          url = "http://#{acceptance_config[:selenium_host]}:#{acceptance_config[:selenium_port]}/wd/hub"
 
           Capybara.register_driver :selenium_remote do |app|
             Capybara::Selenium::Driver.new(app, {:browser => :remote, :url => url})
@@ -194,16 +199,6 @@ class AcceptanceTest
     end
   end
 
-  def driver metadata
-    driver = ENV['DRIVER'].nil? ? nil : ENV['DRIVER'].to_sym
-
-    driver = metadata[:driver] if driver.nil?
-
-    driver = :webkit if driver.nil?
-
-    driver
-  end
-
   def setup_app_host app_host
     Capybara.app_host = app_host
     Capybara.server_port = URI.parse(app_host).port
@@ -216,20 +211,17 @@ class AcceptanceTest
   end
 
   def acceptance_config_exist?
-    not @acceptance_config.nil? and @acceptance_config.size > 0
+    not acceptance_config.nil?
   end
 
   def setup_driver_from_config driver
-    @app_host = app_host_from_url(@acceptance_config[:webapp_url])
+    @app_host = app_host_from_url(acceptance_config[:webapp_url])
 
-    Rails.env = @acceptance_config[:env] if defined? Rails.env
+    Rails.env = acceptance_config[:env] if defined? Rails.env
 
     Capybara.current_driver = driver
     Capybara.javascript_driver = driver
   end
 
-  def selenium_driver? driver
-    driver.to_s =~ /selenium/
-  end
 end
 

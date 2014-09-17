@@ -3,15 +3,21 @@ if defined? RSpec
     attr_reader :acceptance_test
 
     before :all do
-      @acceptance_test = AcceptanceTest.new
+      @acceptance_test = AcceptanceTest.new ".", "tmp"
     end
 
     before do
-      acceptance_test.before self
+      metadata = RSpec.current_example.metadata
+
+      acceptance_test.before metadata
     end
 
     after do
-      acceptance_test.after self
+      metadata = RSpec.current_example.metadata
+
+      acceptance_test.after page, RSpec.current_example.exception, metadata
+
+      self.reset_session!
     end
   end
 

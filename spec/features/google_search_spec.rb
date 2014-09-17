@@ -1,8 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/features_spec_helper')
+require 'acceptance_test'
 
-Capybara.default_wait_time = 5
-
-describe 'Google Search' do
+RSpec.describe 'Google Search' do
   include_context "AcceptanceTest"
 
   before :all do
@@ -25,6 +23,7 @@ describe 'Google Search' do
   end
 
   it "uses webkit driver", driver: :webkit do
+    pending
     visit('/')
 
     fill_in "q", :with => "Capybara"

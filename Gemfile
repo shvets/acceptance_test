@@ -11,13 +11,13 @@ group :test do
 end
 
 group :acceptance_test do
-  gem "activesupport", "~>3.2.14"
-  gem "capybara", "2.1.0"
-  gem "capybara-firebug"
+  gem "activesupport", "~> 4.1.6"
+  gem "capybara", "~> 2.4.1"
+  gem "capybara-firebug", "~> 2.1.0"
+  gem "selenium-webdriver", "~> 2.43.0"
 
-  gem "selenium-webdriver"
+  gem "capybara-webkit", "~> 1.3.0"
 
-  gem "capybara-webkit", "1.0.0"
   # Note: You need to install qt:
   # Mac: brew install qt
   # Ubuntu: sudo apt-get install libqt4-dev libqtwebkit-dev
@@ -25,7 +25,7 @@ group :acceptance_test do
   # Fedora: yum install qt-webkit-devell
 
   # brew install phantomjs
-  gem "poltergeist"
+  gem "poltergeist", "~> 1.5.1"
 end
 
 group :debug do

@@ -1,0 +1,10 @@
+env: 'development'
+
+webapp_url: 'http://www.google.com'
+
+selenium_host: 'localhost'
+selenium_port: 4444
+
+browser: 'firefox'
+
+timeout_in_seconds: 40
