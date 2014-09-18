@@ -6,37 +6,19 @@ require 'active_support/core_ext/hash'
 require 'acceptance_test/acceptance_test_helper'
 
 class AcceptanceTest
-  attr_reader :acceptance_config, :project_root, :screenshot_dir
+  attr_reader :project_root, :acceptance_config, :screenshot_dir
   attr_accessor :app_host
 
-  def initialize project_root, screenshot_dir
+  def initialize project_root, acceptance_config, screenshot_dir
     @project_root = File.expand_path(project_root.to_s)
     @screenshot_dir = File.expand_path(screenshot_dir.to_s)
 
     @app_host = default_app_host
 
-    set_defaults
+    @acceptance_config = acceptance_config.kind_of?(HashWithIndifferentAccess) ?
+        acceptance_config : HashWithIndifferentAccess.new(acceptance_config)
 
     configure
-  end
-
-  def acceptance_config= acceptance_config
-    @acceptance_config = acceptance_config.kind_of?(HashWithIndifferentAccess) ?
-         acceptance_config : HashWithIndifferentAccess.new(acceptance_config)
-  end
-
-  def driver metadata
-    driver = ENV['DRIVER'].nil? ? nil : ENV['DRIVER'].to_sym
-
-    driver = metadata[:driver] if driver.nil?
-
-    driver = :webkit if driver.nil?
-
-    driver
-  end
-
-  def selenium_driver? driver
-    driver.to_s =~ /selenium/
   end
 
   def before metadata={}
@@ -68,15 +50,24 @@ class AcceptanceTest
     Capybara.current_driver = Capybara.default_driver
   end
 
+  def driver metadata
+    driver = ENV['DRIVER'].nil? ? nil : ENV['DRIVER'].to_sym
+
+    driver = metadata[:driver] if driver.nil?
+
+    driver = :webkit if driver.nil?
+
+    driver
+  end
+
+  def selenium_driver? driver
+    driver.to_s =~ /selenium/
+  end
+
   private
 
   def default_app_host
     "http://#{AcceptanceTestHelper.get_localhost}:3000"
-  end
-
-  def set_defaults
-    ENV['APP_HOST'] ||= app_host
-    ENV['WAIT_TIME'] ||= Capybara.default_wait_time.to_s
   end
 
   def configure
@@ -110,8 +101,24 @@ class AcceptanceTest
     end
 
     Capybara.configure do |config|
-      config.default_wait_time = ENV['WAIT_TIME'].to_i
+      config.default_wait_time = timeout_in_seconds
+
       config.run_server = run_server
+    end
+
+    ENV['APP_HOST'] ||= app_host
+    ENV['WAIT_TIME'] ||= Capybara.default_wait_time.to_s
+  end
+
+  def timeout_in_seconds
+    if ENV['WAIT_TIME']
+      ENV['WAIT_TIME'].to_i
+    else
+      if acceptance_config[:timeout_in_seconds]
+        acceptance_config[:timeout_in_seconds]
+      else
+        Capybara.default_wait_time.to_s
+      end
     end
   end
 
@@ -224,4 +231,3 @@ class AcceptanceTest
   end
 
 end
-
