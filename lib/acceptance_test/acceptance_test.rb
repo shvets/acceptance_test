@@ -6,17 +6,16 @@ require 'active_support/core_ext/hash'
 require 'acceptance_test/acceptance_test_helper'
 
 class AcceptanceTest
-  attr_reader :project_root, :acceptance_config, :screenshot_dir
+  attr_reader :project_root, :config, :screenshot_dir
   attr_accessor :app_host
 
-  def initialize project_root, acceptance_config, screenshot_dir
+  def initialize project_root, config, screenshot_dir
     @project_root = File.expand_path(project_root.to_s)
     @screenshot_dir = File.expand_path(screenshot_dir.to_s)
 
     @app_host = default_app_host
 
-    @acceptance_config = acceptance_config.kind_of?(HashWithIndifferentAccess) ?
-        acceptance_config : HashWithIndifferentAccess.new(acceptance_config)
+    @config = config.kind_of?(HashWithIndifferentAccess) ? config : HashWithIndifferentAccess.new(config)
 
     configure
   end
@@ -114,8 +113,8 @@ class AcceptanceTest
     if ENV['WAIT_TIME']
       ENV['WAIT_TIME'].to_i
     else
-      if acceptance_config[:timeout_in_seconds]
-        acceptance_config[:timeout_in_seconds]
+      if config[:timeout_in_seconds]
+        config[:timeout_in_seconds]
       else
         Capybara.default_wait_time.to_s
       end
@@ -158,10 +157,8 @@ class AcceptanceTest
 
       when :selenium_remote
         unless Capybara.drivers[:selenium_remote]
-          url = "http://#{acceptance_config[:selenium_host]}:#{acceptance_config[:selenium_port]}/wd/hub"
-
           Capybara.register_driver :selenium_remote do |app|
-            Capybara::Selenium::Driver.new(app, {:browser => :remote, :url => url})
+            Capybara::Selenium::Driver.new(app, {:browser => :remote, :url => config[:selenium_url]})
 
             #profile = Selenium::WebDriver::Firefox::Profile.new
             #profile.enable_firebug
@@ -218,13 +215,13 @@ class AcceptanceTest
   end
 
   def acceptance_config_exist?
-    not acceptance_config.nil?
+    not config.nil?
   end
 
   def setup_driver_from_config driver
-    @app_host = app_host_from_url(acceptance_config[:webapp_url])
+    @app_host = app_host_from_url(config[:webapp_url])
 
-    Rails.env = acceptance_config[:env] if defined? Rails.env
+    # Rails.env = config[:env] if defined? Rails.env
 
     Capybara.current_driver = driver
     Capybara.javascript_driver = driver

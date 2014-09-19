@@ -1,9 +1,13 @@
 if defined? RSpec
+  require 'acceptance_test/acceptance_test_builder'
+
   acceptance_test_lambda = lambda do
     attr_reader :acceptance_test
 
     before :all do
-      @acceptance_test = AcceptanceTest.new ".", "tmp"
+      config_name = File.expand_path("spec/features/acceptance_config.yml")
+
+      @acceptance_test = AcceptanceTestBuilder.instance.create ".", config_name, "tmp"
     end
 
     before do
