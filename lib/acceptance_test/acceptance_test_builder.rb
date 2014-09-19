@@ -27,7 +27,7 @@ class AcceptanceTestBuilder
     ENV['ASSET_HOST'] = acceptance_test.app_host
 
     puts "Application URL   : #{config[:webapp_url]}"
-    puts "Selenium URL      : http://#{config[:selenium_host]}:#{config[:selenium_port]}"
+    puts "Selenium URL      : #{config[:selenium_url]}" if config[:selenium_url]
     puts "ENV['DRIVER']     : #{ENV['DRIVER']}" if ENV['DRIVER']
     puts "Default Wait Time : #{Capybara.default_wait_time}"
 
