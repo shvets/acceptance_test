@@ -29,21 +29,21 @@ class AcceptanceTest
       select_driver driver
     end
 
+    puts "Current Driver    : #{Capybara.current_driver}"
+
     setup_app_host app_host
   end
 
-  def after page, exception=nil, metadata={}
-    if exception
+  def after metadata={}, exception=nil, page=nil
       driver = driver(metadata)
 
-      if driver and not [:webkit].include? driver
-        screenshot_maker = ScreenshotMaker.new screenshot_dir
+    if driver and exception and page and not [:webkit].include? driver
+      screenshot_maker = ScreenshotMaker.new screenshot_dir
 
-        screenshot_maker.make page, metadata
+      screenshot_maker.make page, metadata
 
-        puts metadata[:full_description]
-        puts "Screenshot: #{screenshot_maker.screenshot_url(metadata)}"
-      end
+      puts metadata[:full_description]
+      puts "Screenshot: #{screenshot_maker.screenshot_url(metadata)}"
     end
 
     Capybara.current_driver = Capybara.default_driver
@@ -63,10 +63,14 @@ class AcceptanceTest
     driver.to_s =~ /selenium/
   end
 
+  def self.supported_drivers
+    [:webkit, :selenium, :poltergeist, :selenium_remote]
+  end
+
   private
 
   def default_app_host
-    "http://#{AcceptanceTestHelper.get_localhost}:3000"
+    "http://#{AcceptanceTestHelper.instance.get_localhost}:3000"
   end
 
   def configure

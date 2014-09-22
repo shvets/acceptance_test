@@ -1,7 +1,7 @@
-require 'acceptance_test'
+require File.expand_path("spec/features/spec_helper")
 
 RSpec.describe 'Google Search' do
-  include_context "AcceptanceTest"
+  include_context "GoogleAcceptanceTest"
 
   before :all do
     acceptance_test.app_host = "http://www.google.com"
@@ -19,7 +19,7 @@ RSpec.describe 'Google Search' do
 
     find("#gbqfbw button").click
 
-    all(:xpath, "//li[@class='g']/h3/a").each { |a| puts a[:href] }
+    # all(:xpath, "//li[@class='g']/h3/a").each { |a| puts a[:href] }
   end
 
   it "uses webkit driver", driver: :webkit do
@@ -34,7 +34,7 @@ RSpec.describe 'Google Search' do
 
     button.click
 
-    all(:xpath, "//li[@class='g']/h3/a").each { |a| puts a[:href] }
+    #all(:xpath, "//li[@class='g']/h3/a").each { |a| puts a[:href] }
   end
 
   it "uses poltergeist driver", driver: :poltergeist do
