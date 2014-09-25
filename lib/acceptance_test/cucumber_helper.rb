@@ -23,6 +23,8 @@ class CucumberHelper
         if name == 'external_source'
           test_name, parameter_name = raw[1][0].split(":")
 
+          puts Cucumber::Ast::OutlineTable.data
+
           size = Cucumber::Ast::OutlineTable.data[test_name][parameter_name].size
 
           new_raw = Array.new(size+1) {Array.new(1)}

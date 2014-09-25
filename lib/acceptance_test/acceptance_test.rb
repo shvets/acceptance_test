@@ -29,7 +29,7 @@ class AcceptanceTest
       select_driver driver
     end
 
-    puts "Current Driver    : #{Capybara.current_driver}"
+    # puts "Current Driver    : #{Capybara.current_driver}"
 
     setup_app_host app_host
   end
