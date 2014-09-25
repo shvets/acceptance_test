@@ -23,15 +23,15 @@ class CucumberHelper
         if name == 'external_source'
           test_name, parameter_name = raw[1][0].split(":")
 
-          puts Cucumber::Ast::OutlineTable.data
+          if Cucumber::Ast::OutlineTable.data
+            size = Cucumber::Ast::OutlineTable.data[test_name][parameter_name].size
 
-          size = Cucumber::Ast::OutlineTable.data[test_name][parameter_name].size
+            new_raw = Array.new(size+1) {Array.new(1)}
+            new_raw[0][0] = parameter_name
 
-          new_raw = Array.new(size+1) {Array.new(1)}
-          new_raw[0][0] = parameter_name
-
-          Cucumber::Ast::OutlineTable.data[test_name][parameter_name].each_with_index do |value, index|
-            new_raw[index+1][0] = value
+            Cucumber::Ast::OutlineTable.data[test_name][parameter_name].each_with_index do |value, index|
+              new_raw[index+1][0] = value
+            end
           end
         end
 
