@@ -1,6 +1,6 @@
 require 'forwardable'
 
-require 'base/page'
+require 'acceptance_test/page'
 
 class PageSet
   extend Forwardable

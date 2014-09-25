@@ -80,3 +80,7 @@
 == Version 1.4.1
 
 * Adding new concepts such as Page and PageSet for building web application representations.
+
+* Bug fix
+
+== Version 1.4.2
