@@ -1,4 +1,6 @@
 require 'uri'
+require 'fileutils'
+
 require 'capybara'
 require "capybara/dsl"
 require 'active_support/core_ext/hash'
@@ -60,7 +62,9 @@ class AcceptanceTest
 
     if driver and exception and page and not [:webkit].include? driver
       screenshot_dir = File.expand_path(config[:screenshot_dir])
-      system "mkdir -p #{screenshot_dir}"
+
+      FileUtils.mkdir_p screenshot_dir
+
       screenshot_maker = ScreenshotMaker.new screenshot_dir
 
       screenshot_maker.make page, metadata

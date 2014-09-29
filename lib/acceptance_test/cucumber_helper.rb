@@ -5,50 +5,23 @@ require 'cucumber/ast/outline_table'
 class CucumberHelper
   include Singleton
 
-  def enable_external_source data
-    outline_table = Cucumber::Ast::OutlineTable
+  def source_type scenario
+    examples = scenario.instance_variable_get(:@example_sections)
 
-    outline_table.class_eval do
-      @data = data # class instance variable
+    examples[0][0][5][0][0]
+  end
 
-      def self.data # access to class instance variable
-        @data
-      end
+  def source_path scenario
+    examples = scenario.instance_variable_get(:@example_sections)
 
-      def initialize(raw, scenario_outline)
-        new_raw = self.build_outline_table raw[0][0], raw[1][0]
+    examples[0][0][5][1][0]
+  end
 
-        raw = new_raw ? new_raw : raw
+  def set_outline_table scenario, keys, values
+    examples = scenario.instance_variable_get(:@example_sections)
 
-        super(raw)
-
-        @scenario_outline = scenario_outline
-        @cells_class = Cucumber::Ast::OutlineTable::ExampleRow
-        init
-      end
-
-      private
-
-      def self.build_outline_table name, pair
-        raw = nil
-
-        if name == 'external_source'
-          test_name, parameter_name = pair.split(":")
-
-          if Cucumber::Ast::OutlineTable.data[test_name]
-            size = Cucumber::Ast::OutlineTable.data[test_name][parameter_name].size
-
-            raw = Array.new(size+1) {Array.new(1)}
-            raw[0][0] = parameter_name
-
-            Cucumber::Ast::OutlineTable.data[test_name][parameter_name].each_with_index do |value, index|
-              raw[index+1][0] = value
-            end
-          end
-        end
-
-        raw
-      end
+    if source_type(scenario) == 'file'
+      examples[0][0][5] = keys + values
     end
   end
 
