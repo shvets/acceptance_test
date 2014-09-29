@@ -1,23 +1,46 @@
 require 'uri'
 require 'capybara'
-
+require "capybara/dsl"
 require 'active_support/core_ext/hash'
 
-require 'acceptance_test/acceptance_test_helper'
-
 class AcceptanceTest
-  attr_reader :project_root, :config, :screenshot_dir
-  attr_accessor :app_host
+  attr_reader :config
 
-  def initialize project_root, config, screenshot_dir
-    @project_root = File.expand_path(project_root.to_s)
-    @screenshot_dir = File.expand_path(screenshot_dir.to_s)
+  def initialize config={}
+    if config
+      @config = config.kind_of?(HashWithIndifferentAccess) ? config : HashWithIndifferentAccess.new(config)
+    else
+      @config = HashWithIndifferentAccess.new
 
-    @app_host = default_app_host
+      config[:screenshot_dir] = File.expand_path('tmp')
+    end
 
-    @config = config.kind_of?(HashWithIndifferentAccess) ? config : HashWithIndifferentAccess.new(config)
+    Capybara.configure do |conf|
+      conf.default_wait_time = timeout_in_seconds
+      conf.match = :first
 
-    configure
+      conf.ignore_hidden_elements = false
+    end
+
+    ENV['APP_HOST'] ||= config[:webapp_url]
+    ENV['WAIT_TIME'] ||= Capybara.default_wait_time.to_s
+
+    # try to load capybara-related rspec library
+    begin
+      require 'capybara/rspec'
+
+      RSpec.configure do |config|
+        config.filter_run_excluding :exclude => true
+      end
+
+      RSpec.configure do |config|
+        config.include Capybara::DSL
+      end
+
+      RSpec::Core::ExampleGroup.send :include, Capybara::DSL
+    rescue
+      ;
+    end
   end
 
   def before metadata={}
@@ -29,15 +52,15 @@ class AcceptanceTest
       select_driver driver
     end
 
-    # puts "Current Driver    : #{Capybara.current_driver}"
-
-    setup_app_host app_host
+    Capybara.app_host = config[:webapp_url]
   end
 
   def after metadata={}, exception=nil, page=nil
       driver = driver(metadata)
 
     if driver and exception and page and not [:webkit].include? driver
+      screenshot_dir = File.expand_path(config[:screenshot_dir])
+      system "mkdir -p #{screenshot_dir}"
       screenshot_maker = ScreenshotMaker.new screenshot_dir
 
       screenshot_maker.make page, metadata
@@ -47,6 +70,36 @@ class AcceptanceTest
     end
 
     Capybara.current_driver = Capybara.default_driver
+  end
+
+  def create_shared_context name
+    throw "rspec library is not available" unless defined? RSpec
+
+    acceptance_test = self
+
+    acceptance_test_lambda = lambda do
+      attr_reader :acceptance_test
+
+      before :all do
+        @acceptance_test = acceptance_test
+      end
+
+      before do |example|
+        acceptance_test.before example.metadata
+      end
+
+      after do |example|
+        acceptance_test.after example.metadata, example.exception, page
+
+        self.reset_session!
+      end
+    end
+
+    RSpec.shared_context name do
+      self.define_singleton_method(:include_context, acceptance_test_lambda)
+
+      include_context
+    end
   end
 
   def driver metadata
@@ -68,50 +121,6 @@ class AcceptanceTest
   end
 
   private
-
-  def default_app_host
-    "http://#{AcceptanceTestHelper.instance.get_localhost}:3000"
-  end
-
-  def configure
-    run_server = (ENV['RUN_SERVER'] == "true")
-
-    if run_server and defined? Rails
-      require 'rspec/rails'
-      require "capybara/rails"
-    end
-
-    require "capybara"
-    require "capybara/dsl"
-
-    # try to load capybara-related rspec library
-    begin
-      require 'capybara/rspec'
-    rescue
-      ;
-    end
-
-    if defined? RSpec
-      RSpec.configure do |config|
-        config.filter_run_excluding :exclude => true
-      end
-
-      RSpec.configure do |config|
-        config.include Capybara::DSL
-      end
-
-      RSpec::Core::ExampleGroup.send :include, Capybara::DSL
-    end
-
-    Capybara.configure do |config|
-      config.default_wait_time = timeout_in_seconds
-
-      config.run_server = run_server
-    end
-
-    ENV['APP_HOST'] ||= app_host
-    ENV['WAIT_TIME'] ||= Capybara.default_wait_time.to_s
-  end
 
   def timeout_in_seconds
     if ENV['WAIT_TIME']
@@ -188,10 +197,12 @@ class AcceptanceTest
   def select_driver driver
     if selenium_driver?(driver)
       if driver == :selenium_remote
-        setup_driver_from_config driver
+        Capybara.current_driver = driver
+        Capybara.javascript_driver = driver
       else
         if acceptance_config_exist?
-          setup_driver_from_config driver
+          Capybara.current_driver = driver
+          Capybara.javascript_driver = driver
         else
           if Capybara.drivers[driver]
             Capybara.current_driver = driver
@@ -207,28 +218,18 @@ class AcceptanceTest
     end
   end
 
-  def setup_app_host app_host
-    Capybara.app_host = app_host
-    Capybara.server_port = URI.parse(app_host).port
-  end
-
-  def app_host_from_url url
-    uri = URI(url)
-
-    "#{uri.scheme}://#{uri.host}:#{uri.port}"
-  end
-
   def acceptance_config_exist?
     not config.nil?
   end
 
-  def setup_driver_from_config driver
-    @app_host = app_host_from_url(config[:webapp_url])
-
-    # Rails.env = config[:env] if defined? Rails.env
-
-    Capybara.current_driver = driver
-    Capybara.javascript_driver = driver
-  end
-
+  # def self.get_localhost
+  #   orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true  # turn off reverse DNS resolution temporarily
+  #
+  #   UDPSocket.open do |s|
+  #     s.connect '192.168.1.1', 1
+  #     s.addr.last
+  #   end
+  # ensure
+  #   Socket.do_not_reverse_lookup = orig
+  # end
 end

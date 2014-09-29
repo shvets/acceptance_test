@@ -16,30 +16,38 @@ class CucumberHelper
       end
 
       def initialize(raw, scenario_outline)
-        new_raw = raw
+        new_raw = self.build_outline_table raw[0][0], raw[1][0]
 
-        name = raw[0][0]
+        raw = new_raw ? new_raw : raw
 
-        if name == 'external_source'
-          test_name, parameter_name = raw[1][0].split(":")
-
-          if Cucumber::Ast::OutlineTable.data[test_name]
-            size = Cucumber::Ast::OutlineTable.data[test_name][parameter_name].size
-
-            new_raw = Array.new(size+1) {Array.new(1)}
-            new_raw[0][0] = parameter_name
-
-            Cucumber::Ast::OutlineTable.data[test_name][parameter_name].each_with_index do |value, index|
-              new_raw[index+1][0] = value
-            end
-          end
-        end
-
-        super(new_raw)
+        super(raw)
 
         @scenario_outline = scenario_outline
         @cells_class = Cucumber::Ast::OutlineTable::ExampleRow
         init
+      end
+
+      private
+
+      def self.build_outline_table name, pair
+        raw = nil
+
+        if name == 'external_source'
+          test_name, parameter_name = pair.split(":")
+
+          if Cucumber::Ast::OutlineTable.data[test_name]
+            size = Cucumber::Ast::OutlineTable.data[test_name][parameter_name].size
+
+            raw = Array.new(size+1) {Array.new(1)}
+            raw[0][0] = parameter_name
+
+            Cucumber::Ast::OutlineTable.data[test_name][parameter_name].each_with_index do |value, index|
+              raw[index+1][0] = value
+            end
+          end
+        end
+
+        raw
       end
     end
   end
@@ -59,4 +67,5 @@ class CucumberHelper
 
     metadata
   end
+
 end

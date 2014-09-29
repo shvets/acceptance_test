@@ -1,6 +1,8 @@
-webapp_url: 'http://www.google.com'
+webapp_url: 'http://www.wikipedia.org'
 
 selenium_url: 'http://localhost:4444'
+
+screenshot_dir: 'tmp'
 
 browser: 'firefox'
 

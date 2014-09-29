@@ -17,6 +17,8 @@ group :acceptance_test do
   gem "selenium-webdriver", "~> 2.43.0"
 
   gem "capybara-webkit", "~> 1.3.0"
+  gem "cucumber", "~> 1.3.17"
+  gem "rspec-example_steps", "~> 3.0.2"
 
   # Note: You need to install qt:
   # Mac: brew install qt
