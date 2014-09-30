@@ -6,22 +6,16 @@ class CucumberHelper
   include Singleton
 
   def source_type scenario
-    examples = scenario.instance_variable_get(:@example_sections)
-
-    examples[0][0][5][0][0]
+    examples(scenario)[0][0][5][0][0]
   end
 
   def source_path scenario
-    examples = scenario.instance_variable_get(:@example_sections)
-
-    examples[0][0][5][1][0]
+    examples(scenario)[0][0][5][1][0]
   end
 
   def set_outline_table scenario, keys, values
-    examples = scenario.instance_variable_get(:@example_sections)
-
-    if source_type(scenario) == 'file'
-      examples[0][0][5] = keys + values
+    if scenario.kind_of?(Cucumber::Ast::ScenarioOutline) and source_type(scenario) == 'file'
+      examples(scenario)[0][0][5] = keys + values
     end
   end
 
@@ -39,6 +33,12 @@ class CucumberHelper
     end
 
     metadata
+  end
+
+  private
+
+  def examples scenario
+    scenario.instance_variable_get(:@example_sections)
   end
 
 end

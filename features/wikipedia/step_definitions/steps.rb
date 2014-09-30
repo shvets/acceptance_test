@@ -8,16 +8,12 @@ acceptance_test = nil
 cucumber_helper = CucumberHelper.instance
 
 def create_acceptance_test scenario, cucumber_helper
-  source_type = cucumber_helper.source_type(scenario)
+  source_path = cucumber_helper.source_path(scenario)
 
-  if source_type == 'file'
-    source_path = cucumber_helper.source_path(scenario)
+  keys = [["keyword"]]
+  values = CSV.read(File.expand_path(source_path))
 
-    keys = [["keyword"]]
-    values = CSV.read(File.expand_path(source_path))
-
-    cucumber_helper.set_outline_table scenario, keys, values
-  end
+  cucumber_helper.set_outline_table scenario, keys, values
 
   config_name = File.expand_path("spec/acceptance_config.yml")
   config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
