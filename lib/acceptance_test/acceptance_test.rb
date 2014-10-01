@@ -88,11 +88,11 @@ class AcceptanceTest
         @acceptance_test = acceptance_test
       end
 
-      before do |example|
+      around do |example|
         acceptance_test.before example.metadata
-      end
 
-      after do |example|
+        example.run
+
         acceptance_test.after example.metadata, example.exception, page
 
         self.reset_session!
@@ -104,6 +104,22 @@ class AcceptanceTest
 
       include_context
     end
+  end
+
+  def metadata_from_scenario scenario
+    tags = scenario.source_tag_names.collect { |a| a.gsub("@", '') }
+
+    metadata = {}
+
+    if tags.size > 0
+      tag = tags.first.to_sym
+
+      if AcceptanceTest.supported_drivers.include? tag
+        metadata[:driver] = tag
+      end
+    end
+
+    metadata
   end
 
   def driver metadata

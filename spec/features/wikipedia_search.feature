@@ -7,7 +7,7 @@ Feature: Using Wikipedia
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com
-    When I enter "Capybara"
+    When I enter word "Capybara"
     And I click submit button
     Then I should see results: "Capybara"
 
@@ -15,7 +15,7 @@ Feature: Using Wikipedia
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com
-    When I enter "Capybara"
+    When I enter word "Capybara"
     And I click submit button
     Then I should see results: "Capybara"
 
@@ -23,6 +23,6 @@ Feature: Using Wikipedia
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com
-    When I enter "Capybara"
+    When I enter word "Capybara"
     And I click submit button
     Then I should see results: "Capybara"

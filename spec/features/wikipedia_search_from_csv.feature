@@ -8,9 +8,9 @@ Feature: Using Wikipedia
 
     Given I am on wikipedia.com
     When I enter word <keyword>
-    And click submit button
-    Then I should see keyword results: <keyword>
+    And I click submit button
+    Then I should see results: <keyword>
 
-    Examples:
-      | file |
-      | features/wikipedia/support/data.csv |
+  Examples:
+    | keyword |
+    | file:spec/features/data.csv |

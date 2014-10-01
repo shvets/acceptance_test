@@ -1,34 +1,26 @@
-require 'acceptance_test'
-require 'acceptance_test/cucumber_helper.rb'
-
 require 'csv'
+require 'yaml'
+
+require 'acceptance_test'
+
+require 'acceptance_test/gherkin_helper'
+
+data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
+GherkinHelper.instance.enable_external_source data_reader
 
 acceptance_test = nil
 
-cucumber_helper = CucumberHelper.instance
-
-def create_acceptance_test scenario, cucumber_helper
-  source_path = cucumber_helper.source_path(scenario)
-
-  keys = [["keyword"]]
-  values = CSV.read(File.expand_path(source_path))
-
-  cucumber_helper.set_outline_table scenario, keys, values
-
+Before do |scenario|
   config_name = File.expand_path("spec/acceptance_config.yml")
   config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
 
-  AcceptanceTest.new config
-end
+  acceptance_test = AcceptanceTest.new config
 
-Before do |scenario|
-  acceptance_test = create_acceptance_test(scenario, cucumber_helper)
-
-  acceptance_test.before cucumber_helper.metadata_from_scenario(scenario)
+  acceptance_test.before acceptance_test.metadata_from_scenario(scenario)
 end
 
 After do |scenario|
-  acceptance_test.after cucumber_helper.metadata_from_scenario(scenario)
+  acceptance_test.after acceptance_test.metadata_from_scenario(scenario)
 
   reset_session!
 end
@@ -55,7 +47,7 @@ Then /^I should see css "([^"]*)"$/ do |css|
   expect(page).to have_css(css)
 end
 
-When(/^click submit button$/) do
+When(/^I click submit button$/) do
   find(".formBtn", match: :first).click
 end
 

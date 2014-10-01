@@ -19,6 +19,7 @@ group :acceptance_test do
   gem "capybara-webkit", "~> 1.3.0"
   gem "cucumber", "~> 1.3.17"
   gem "rspec-example_steps", "~> 3.0.2"
+  gem "turnip", "~> 1.2.4"
 
   # Note: You need to install qt:
   # Mac: brew install qt
