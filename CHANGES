@@ -108,3 +108,7 @@
 == Version 1.4.8
 
 * Provide universal code for both cucumber and turnip
+
+== Version 1.4.9
+
+* refactor the code

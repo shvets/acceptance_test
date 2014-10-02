@@ -9,4 +9,5 @@ end
 
 RSpec.configure do |config|
   config.include WikipediaSteps
+  # config.include WikipediaSteps, :web => true
 end

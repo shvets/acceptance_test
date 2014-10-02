@@ -8,7 +8,7 @@ require 'active_support/core_ext/hash'
 class AcceptanceTest
   attr_reader :config
 
-  def initialize config={}
+  def configure config={}, rspec=true
     if config
       @config = config.kind_of?(HashWithIndifferentAccess) ? config : HashWithIndifferentAccess.new(config)
     else
@@ -43,6 +43,8 @@ class AcceptanceTest
     rescue
       ;
     end
+
+    configure_rspec if rspec
   end
 
   def before metadata={}
@@ -58,7 +60,7 @@ class AcceptanceTest
   end
 
   def after metadata={}, exception=nil, page=nil
-      driver = driver(metadata)
+    driver = driver(metadata)
 
     if driver and exception and page and not [:webkit].include? driver
       screenshot_dir = File.expand_path(config[:screenshot_dir])
@@ -82,21 +84,7 @@ class AcceptanceTest
     acceptance_test = self
 
     acceptance_test_lambda = lambda do
-      attr_reader :acceptance_test
-
-      before :all do
-        @acceptance_test = acceptance_test
-      end
-
-      around do |example|
-        acceptance_test.before example.metadata
-
-        example.run
-
-        acceptance_test.after example.metadata, example.exception, page
-
-        self.reset_session!
-      end
+      acceptance_test.configure_rspec self
     end
 
     RSpec.shared_context name do
@@ -138,6 +126,20 @@ class AcceptanceTest
 
   def self.supported_drivers
     [:webkit, :selenium, :poltergeist, :selenium_remote]
+  end
+
+  def configure_rspec rspec_conf=nil
+    acceptance_test = self
+
+    rspec_conf = RSpec.configuration unless rspec_conf
+
+    rspec_conf.around(:each) do |example|
+      acceptance_test.before(example.metadata)
+
+      example.run
+
+      acceptance_test.after(example.metadata)
+    end
   end
 
   private
