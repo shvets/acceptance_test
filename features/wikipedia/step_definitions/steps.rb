@@ -8,13 +8,13 @@ require 'acceptance_test/gherkin_helper'
 data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
 GherkinHelper.instance.enable_external_source data_reader
 
-acceptance_test = AcceptanceTest.new
+acceptance_test = AcceptanceTest.new false
 
 Before do |scenario|
   config_name = File.expand_path("spec/acceptance_config.yml")
   config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
 
-  acceptance_test.configure config, false
+  acceptance_test.configure config
 
   acceptance_test.before acceptance_test.metadata_from_scenario(scenario)
 end

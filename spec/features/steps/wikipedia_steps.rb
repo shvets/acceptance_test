@@ -2,25 +2,19 @@ require 'csv'
 require 'yaml'
 
 require 'acceptance_test'
-require 'acceptance_test/gherkin_helper'
-
-def setup_env
-  data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
-  GherkinHelper.instance.enable_external_source data_reader
-
-  config_name = File.expand_path("spec/acceptance_config.yml")
-  config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
-
-  acceptance_test = AcceptanceTest.new
-  acceptance_test.configure config
-end
-
-setup_env
 
 module WikipediaSteps
+  attr_reader :acceptance_test
+
+  def initialize
+    @acceptance_test = AcceptanceTest.new
+  end
+
   step "I am within wikipedia.com" do
-    # Capybara.app_host = "http://wikipedia.com"
-    # Capybara.default_driver = :selenium
+    config_name = File.expand_path("spec/acceptance_config.yml")
+    config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
+
+    acceptance_test.configure config
   end
 
   step "I am on wikipedia.com" do

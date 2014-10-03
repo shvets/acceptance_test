@@ -15,20 +15,23 @@ class PageSet
     self.instance_eval &code
   end
 
-  def self.delegate_to_pages *pages
+  def delegate_to_pages *pages
     pages.each do |page|
-      class_name = camelize(page.to_s)
-      clazz = Object.const_get(class_name)
-
-      attr_reader page
-
-      def_delegators page, *(clazz.instance_methods - Page.instance_methods)
+      delegate_to_page page
     end
   end
 
+  def delegate_to_page page
+    self.class.send :attr_reader, page
+
+    clazz = self.send(page).class
+
+    self.class.def_delegators page, *(clazz.instance_methods - Page.instance_methods)
+    end
+
   private
 
-  def self.camelize string
+  def camelize string
     string.split("_").each {|s| s.capitalize! }.join("")
   end
 end

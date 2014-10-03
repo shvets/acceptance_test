@@ -8,7 +8,11 @@ require 'active_support/core_ext/hash'
 class AcceptanceTest
   attr_reader :config
 
-  def configure config={}, rspec=true
+  def initialize rspec=true
+    configure_rspec if rspec
+  end
+
+  def configure config={}
     if config
       @config = config.kind_of?(HashWithIndifferentAccess) ? config : HashWithIndifferentAccess.new(config)
     else
@@ -44,7 +48,7 @@ class AcceptanceTest
       ;
     end
 
-    configure_rspec if rspec
+    Capybara.app_host = config[:webapp_url]
   end
 
   def before metadata={}
@@ -55,8 +59,6 @@ class AcceptanceTest
 
       select_driver driver
     end
-
-    Capybara.app_host = config[:webapp_url]
   end
 
   def after metadata={}, exception=nil, page=nil
@@ -114,6 +116,11 @@ class AcceptanceTest
     driver = ENV['DRIVER'].nil? ? nil : ENV['DRIVER'].to_sym
 
     driver = metadata[:driver] if driver.nil?
+
+    self.class.supported_drivers.each do |supported_driver|
+      driver = supported_driver if metadata[supported_driver]
+      break if driver
+    end
 
     driver = :webkit if driver.nil?
 

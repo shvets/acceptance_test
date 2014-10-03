@@ -4,6 +4,7 @@ Feature: Using Wikipedia
     Given I am within wikipedia.com
 
   @selenium
+  @wikipedia
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com
