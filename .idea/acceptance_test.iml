@@ -420,7 +420,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v4.1.6, RVM: ruby-1.9.3-p547 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.2, RVM: ruby-1.9.3-p547 [acceptance_test]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.7.3, RVM: ruby-1.9.3-p547 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.7.2, RVM: ruby-1.9.3-p547 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara (v2.4.1, RVM: ruby-1.9.3-p547 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara-firebug (v2.1.0, RVM: ruby-1.9.3-p547 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara-webkit (v1.3.0, RVM: ruby-1.9.3-p547 [acceptance_test]) [gem]" level="application" />
