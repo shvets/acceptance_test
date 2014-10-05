@@ -1,20 +1,7 @@
-require 'csv'
-require 'yaml'
-
-require 'acceptance_test'
-
 module WikipediaSteps
-  attr_reader :acceptance_test
-
-  def initialize
-    @acceptance_test = AcceptanceTest.new
-  end
 
   step "I am within wikipedia.com" do
-    config_name = File.expand_path("spec/acceptance_config.yml")
-    config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
-
-    acceptance_test.configure config
+    self.class.include_context "WikipediaAcceptanceTest"
   end
 
   step "I am on wikipedia.com" do

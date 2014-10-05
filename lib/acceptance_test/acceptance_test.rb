@@ -1,16 +1,15 @@
 require 'uri'
 require 'fileutils'
+require 'singleton'
 
 require 'capybara'
 require "capybara/dsl"
 require 'active_support/core_ext/hash'
 
 class AcceptanceTest
-  attr_reader :config
+  include Singleton
 
-  def initialize rspec=true
-    configure_rspec if rspec
-  end
+  attr_reader :config
 
   def configure config={}
     if config
@@ -86,7 +85,7 @@ class AcceptanceTest
     acceptance_test = self
 
     acceptance_test_lambda = lambda do
-      acceptance_test.configure_rspec self
+      acceptance_test.configure_rspec self.parent_groups.last
     end
 
     RSpec.shared_context name do

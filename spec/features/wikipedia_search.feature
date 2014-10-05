@@ -13,6 +13,7 @@ Feature: Using Wikipedia
     Then I should see results: "Capybara"
 
   @webkit
+  @wikipedia
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com
@@ -21,6 +22,7 @@ Feature: Using Wikipedia
     Then I should see results: "Capybara"
 
   @poltergeist
+  @wikipedia
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com

@@ -1,20 +1,12 @@
-require 'turnip/capybara'
-require 'turnip/rspec'
+require 'acceptance_test/turnip_helper'
 
-RSpec.configure do |config|
-  config.include Capybara::DSL
-end
+helper = TurnipHelper.new
 
-require 'features/steps/wikipedia_steps'
+config_name = File.expand_path("spec/acceptance_config.yml")
+config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
 
-RSpec.configure do |config|
-  config.include WikipediaSteps, :wikipedia => true
-end
+helper.acceptance_test.configure config
 
-require 'acceptance_test/gherkin_helper'
+helper.register_steps 'features/steps/wikipedia_steps', 'WikipediaSteps', :wikipedia, "WikipediaAcceptanceTest"
 
-# enable external source for gherkin
-
-data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
-GherkinHelper.instance.enable_external_source data_reader
 

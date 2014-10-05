@@ -1,6 +1,7 @@
 require 'acceptance_test'
 
-acceptance_test = AcceptanceTest.new
+acceptance_test = AcceptanceTest.instance
+acceptance_test.configure_rspec
 acceptance_test.configure({webapp_url: "http://www.wikipedia.org", timeout_in_seconds: 10})
 
 RSpec.describe 'Wikipedia Search' do

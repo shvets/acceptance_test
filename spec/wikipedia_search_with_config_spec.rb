@@ -4,7 +4,7 @@ require 'yaml'
 config_name = File.expand_path("spec/acceptance_config.yml")
 config = config_name ? HashWithIndifferentAccess.new(YAML.load_file(config_name)) : {}
 
-acceptance_test = AcceptanceTest.new false
+acceptance_test = AcceptanceTest.instance
 acceptance_test.configure config
 
 acceptance_test.create_shared_context "WikipediaAcceptanceTest"

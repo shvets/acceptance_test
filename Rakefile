@@ -41,3 +41,8 @@ end
 #   system "cp -R ~/debugger-ruby_core_source/lib $GEM_HOME/gems/debugger-ruby_core_source-1.2.3"
 # end
 
+task :turnip do
+  ARGV.shift
+
+  system "bundle exec rspec -r turnip/rspec #{ARGV.join(' ')}"
+end
