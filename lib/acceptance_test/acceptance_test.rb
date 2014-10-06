@@ -85,7 +85,7 @@ class AcceptanceTest
     acceptance_test = self
 
     acceptance_test_lambda = lambda do
-      acceptance_test.configure_rspec self.parent_groups.last
+      acceptance_test.configure_rspec self
     end
 
     RSpec.shared_context name do
@@ -144,7 +144,7 @@ class AcceptanceTest
 
       example.run
 
-      acceptance_test.after(example.metadata)
+      acceptance_test.after(example.metadata, example.exception, page)
     end
   end
 
