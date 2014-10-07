@@ -25,10 +25,8 @@ class AcceptanceTestHelper
   def register_turnip_steps path, class_name, tag, shared_group
     require path
 
-    clazz = Object.const_get(class_name)
-
     RSpec.configure do |config|
-      config.include clazz, tag => true
+      config.include class_name.constantize, tag => true
     end
 
     AcceptanceTest.instance.create_shared_context shared_group

@@ -2,7 +2,7 @@ class ScreenshotMaker
   attr_reader :basedir
 
   def initialize basedir
-    @basedir = File.expand_path(basedir.to_s)
+    @basedir = basedir
   end
 
   def make page, options
@@ -10,7 +10,7 @@ class ScreenshotMaker
   end
 
   def screenshot_path options
-    "#{basedir}/#{screenshot_name(options)}"
+    File.expand_path("#{basedir}/#{screenshot_name(options)}")
   end
 
   def screenshot_name options
