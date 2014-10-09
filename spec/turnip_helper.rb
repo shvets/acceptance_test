@@ -18,10 +18,6 @@ require  'features/steps/search_with_drivers_steps'
 require  'features/steps/search_with_examples_from_csv_steps'
 require  'features/steps/search_with_table_steps'
 
-AcceptanceTest.instance.create_shared_context "SearchWithDriversAcceptanceTest"
-AcceptanceTest.instance.create_shared_context "SearchWithExamplesFromCsvAcceptanceTest"
-AcceptanceTest.instance.create_shared_context "SearchWithTableAcceptanceTest"
-
 config_name = File.expand_path("spec/acceptance_config.yml")
 config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
 
