@@ -1,7 +1,7 @@
-module WikipediaSteps
+module SearchWithDriversSteps
 
   step "I am within wikipedia.com" do
-    self.class.include_context "WikipediaAcceptanceTest"
+    self.class.include_context "SearchWithDriversAcceptanceTest"
   end
 
   step "I am on wikipedia.com" do
@@ -16,7 +16,8 @@ module WikipediaSteps
     find(".formBtn", match: :first).click
   end
 
-  step "I should see results: :content" do |text|
+  step "I should see :text" do |text|
     expect(page).to have_content text
   end
+
 end

@@ -4,28 +4,28 @@ Feature: Using Wikipedia
     Given I am within wikipedia.com
 
   @selenium
-  @wikipedia
+  @search_with_drivers
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com
     When I enter word "Capybara"
     And I click submit button
-    Then I should see results: "Capybara"
+    Then I should see "Capybara"
 
   @webkit
-  @wikipedia
+  @search_with_drivers
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com
     When I enter word "Capybara"
     And I click submit button
-    Then I should see results: "Capybara"
+    Then I should see "Capybara"
 
   @poltergeist
-  @wikipedia
+  @search_with_drivers
   Scenario: Searching with selenium for a term with submit
 
     Given I am on wikipedia.com
     When I enter word "Capybara"
     And I click submit button
-    Then I should see results: "Capybara"
+    Then I should see "Capybara"
