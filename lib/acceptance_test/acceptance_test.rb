@@ -6,6 +6,9 @@ require 'capybara'
 require "capybara/dsl"
 require 'active_support/core_ext/hash'
 
+require 'acceptance_test/gherkin_helper'
+require 'acceptance_test/turnip_helper'
+
 class AcceptanceTest
   include Singleton
 
@@ -19,6 +22,8 @@ class AcceptanceTest
 
       config[:screenshot_dir] = File.expand_path('tmp')
     end
+
+    set_app_host
 
     Capybara.configure do |conf|
       conf.default_wait_time = timeout_in_seconds
@@ -47,9 +52,19 @@ class AcceptanceTest
       ;
     end
 
-    Capybara.app_host = config[:webapp_url]
+    Capybara.default_driver = :selenium
+  end
 
-    # Capybara.default_driver = :selenium
+  def set_app_host
+    Capybara.app_host = AcceptanceTest.instance.config[:webapp_url]
+  end
+
+  def enable_external_source data_reader
+    GherkinHelper.instance.enable_external_source data_reader
+  end
+
+  def extend_turnip
+    TurnipHelper.instance.extend_turnip
   end
 
   def before metadata={}
@@ -136,10 +151,18 @@ class AcceptanceTest
     [:webkit, :selenium, :poltergeist, :selenium_remote]
   end
 
-  def configure_rspec rspec_conf=nil
+  def configure_rspec object=nil
     acceptance_test = self
 
-    rspec_conf = RSpec.configuration unless rspec_conf
+    if object
+      if object.kind_of? RSpec::Core::Example
+        rspec_conf = object.example_group.parent_groups.last
+      else
+        rspec_conf = object
+      end
+    else
+      rspec_conf = RSpec.configuration
+    end
 
     rspec_conf.around(:each) do |example|
       acceptance_test.before(example.metadata)

@@ -2,14 +2,17 @@ require 'yaml'
 require 'csv'
 require 'active_support/core_ext/hash'
 
-require 'acceptance_test/acceptance_test_helper'
+require 'acceptance_test'
 
-helper = AcceptanceTestHelper.instance
+acceptance_test = AcceptanceTest.instance
 
 # enable external source for gherkin
 
 data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
-helper.enable_external_source data_reader
+
+acceptance_test.enable_external_source data_reader
+
+# acceptance_test.extend_turnip
 
 require  'features/steps/search_with_drivers_steps'
 require  'features/steps/search_with_examples_from_csv_steps'
@@ -22,5 +25,4 @@ AcceptanceTest.instance.create_shared_context "SearchWithTableAcceptanceTest"
 config_name = File.expand_path("spec/acceptance_config.yml")
 config = HashWithIndifferentAccess.new(YAML.load_file(config_name))
 
-helper.configure config
-
+acceptance_test.configure config

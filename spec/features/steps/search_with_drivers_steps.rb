@@ -1,9 +1,27 @@
+require 'features/steps/common_steps'
+
+RSpec.configure do |config|
+  config.before(:search_with_drivers => true) do |example|
+    AcceptanceTest.instance.configure_rspec example
+  end
+end
+
 steps_for :search_with_drivers do
+  include CommonSteps
+
+  # before do
+  #   AcceptanceTest.instance.configure_rspec rspec_root
+  #
+  # end
+  #
+  # after do
+  #   puts "after"
+  # end
 
   step "I am within wikipedia.com" do
-    self.class.include_context "SearchWithDriversAcceptanceTest"
-    p Capybara.default_driver
-    p Capybara.current_driver
+    puts Capybara.current_driver
+
+    AcceptanceTest.instance.set_app_host
   end
 
   step "I am on wikipedia.com" do
@@ -16,10 +34,6 @@ steps_for :search_with_drivers do
 
   step "I click submit button" do
     find(".formBtn", match: :first).click
-  end
-
-  step "I should see :text" do |text|
-    expect(page).to have_content text
   end
 
 end
