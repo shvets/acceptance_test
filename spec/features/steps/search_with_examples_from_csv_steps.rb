@@ -1,4 +1,4 @@
-module SearchWithExamplesFromCsvSteps
+steps_for :search_with_examples_from_csv do
 
   step "I am within wikipedia.com" do
     self.class.include_context "SearchWithExamplesFromCsvAcceptanceTest"

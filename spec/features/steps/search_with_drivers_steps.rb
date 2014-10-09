@@ -1,7 +1,9 @@
-module SearchWithDriversSteps
+steps_for :search_with_drivers do
 
   step "I am within wikipedia.com" do
     self.class.include_context "SearchWithDriversAcceptanceTest"
+    p Capybara.default_driver
+    p Capybara.current_driver
   end
 
   step "I am on wikipedia.com" do

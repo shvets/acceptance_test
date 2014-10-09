@@ -1,5 +1,4 @@
-module SearchWithTableSteps
-
+steps_for :search_with_table do
   step "I am within wikipedia.com" do
     self.class.include_context "SearchWithTableAcceptanceTest"
   end
@@ -23,10 +22,6 @@ module SearchWithTableSteps
   step "I should see <:key>" do |key|
     expect(page).to have_content @test_data[key]
   end
-
-  # step "I enter word :word" do |word|
-  #   fill_in "searchInput", :with => word
-  # end
 
   step "I enter word <:key>" do |key|
     fill_in "searchInput", :with => @test_data[key]

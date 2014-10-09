@@ -6,15 +6,18 @@ require 'acceptance_test/acceptance_test_helper'
 
 helper = AcceptanceTestHelper.instance
 
-data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
-helper.enable_external_source data_reader # enable external source for gherkin
+# enable external source for gherkin
 
-helper.register_turnip_steps 'features/steps/search_with_drivers_steps',
-                             'SearchWithDriversSteps', :search_with_drivers, "SearchWithDriversAcceptanceTest"
-helper.register_turnip_steps 'features/steps/search_with_examples_from_csv_steps',
-                             'SearchWithExamplesFromCsvSteps', :search_with_examples_from_csv, "SearchWithExamplesFromCsvAcceptanceTest"
-helper.register_turnip_steps 'features/steps/search_with_table_steps',
-                             'SearchWithTableSteps', :search_with_table, "SearchWithTableAcceptanceTest"
+data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
+helper.enable_external_source data_reader
+
+require  'features/steps/search_with_drivers_steps'
+require  'features/steps/search_with_examples_from_csv_steps'
+require  'features/steps/search_with_table_steps'
+
+AcceptanceTest.instance.create_shared_context "SearchWithDriversAcceptanceTest"
+AcceptanceTest.instance.create_shared_context "SearchWithExamplesFromCsvAcceptanceTest"
+AcceptanceTest.instance.create_shared_context "SearchWithTableAcceptanceTest"
 
 config_name = File.expand_path("spec/acceptance_config.yml")
 config = HashWithIndifferentAccess.new(YAML.load_file(config_name))

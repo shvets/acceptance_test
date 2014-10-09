@@ -49,7 +49,7 @@ class AcceptanceTest
 
     Capybara.app_host = config[:webapp_url]
 
-    Capybara.default_driver = :selenium
+    # Capybara.default_driver = :selenium
   end
 
   def before metadata={}
