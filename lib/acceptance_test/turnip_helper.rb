@@ -5,6 +5,61 @@ require 'turnip/define'
 class TurnipHelper
   include Singleton
 
+  def build_dynamic_steps page_set, context
+    ##self.class.step :enter_word, "I enter word :word"
+
+    turnip_rspec_execute = Turnip::RSpec::Execute
+
+    turnip_rspec_execute.class_eval do
+      alias_method :old_run_step, :run_step
+
+      def run_step(feature_file, step)
+        begin
+          instance_eval <<-EOS, feature_file, step.line
+            step(step)
+          EOS
+        rescue Turnip::Pending => e
+
+          # instance_eval <<-EOS, feature_file, step.line
+          #   step(:visit_home_page, "I am on wikipedia.com")
+          # EOS
+
+          # page_set.pages.each do |page|
+          #   page_set.page_methods(page).each do |method|
+          #     context.class.step "I #{method.to_s.gsub('_', ' ')}" do
+          #       send method
+          #     end
+          #
+          #     # context.class.step method, "I #{method.to_s.gsub('_', ' ')}"
+          #     #
+          #     # context.class.step method, "#{method.to_s.gsub('_', ' ')}"
+          #   end
+          # end
+
+          old_run_step feature_file, step
+        end
+      end
+    end
+
+    if context
+      context.class.send(:define_method, :method_missing) do |meth, *args, &block|
+        page_set.send meth, *args, &block
+      end
+    end
+
+    # page_set.pages.each do |page|
+    #   page_set.page_methods(page).each do |method|
+    #     page_set.class.step "I #{method.to_s.gsub('_', ' ')}" do
+    #       send method
+    #     end
+    #
+    #     page_set.class.step "#{method.to_s.gsub('_', ' ')}" do
+    #       send method
+    #     end
+    #   end
+    # end
+  end
+
   def extend_turnip
     turnip_define = Turnip::Define
 

@@ -5,7 +5,13 @@ require 'acceptance_test/page'
 class PageSet
   extend Forwardable
 
+  attr_reader :pages
   attr_accessor :session
+
+  def initialize session=nil
+    @session = session
+    @pages = []
+  end
 
   def page
     session
@@ -22,16 +28,23 @@ class PageSet
   end
 
   def delegate_to_page page
+    @pages << page
+
     self.class.send :attr_reader, page
 
+    self.class.def_delegators page, *page_methods(page)
+  end
+
+  def page_methods page
     clazz = self.send(page).class
 
-    self.class.def_delegators page, *(clazz.instance_methods - Page.instance_methods)
-    end
+    clazz.instance_methods - Page.instance_methods
+  end
 
   private
 
   def camelize string
     string.split("_").each {|s| s.capitalize! }.join("")
   end
+
 end

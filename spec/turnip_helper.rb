@@ -15,6 +15,7 @@ acceptance_test.enable_external_source data_reader
 # acceptance_test.extend_turnip
 
 require  'features/steps/search_with_drivers_steps'
+require  'features/steps/search_with_page_steps'
 require  'features/steps/search_with_examples_from_csv_steps'
 require  'features/steps/search_with_table_steps'
 

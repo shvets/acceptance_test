@@ -4,6 +4,10 @@ RSpec.configure do |config|
   config.before(:search_with_drivers => true) do |example|
     AcceptanceTest.instance.configure_rspec example
   end
+
+  config.after(:search_with_drivers => true) do |_|
+    reset_session!
+  end
 end
 
 steps_for :search_with_drivers do
