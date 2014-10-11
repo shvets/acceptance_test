@@ -1,26 +1,25 @@
-require 'features/steps/common_steps'
+require 'steps/common_steps'
 
-RSpec.configure do |config|
-  config.before(:search_with_drivers => true) do |example|
-    AcceptanceTest.instance.configure_rspec example
-  end
-
-  config.after(:search_with_drivers => true) do |_|
-    reset_session!
-  end
-end
+# RSpec.configure do |config|
+#   config.before(:search_with_drivers => true) do |example|
+#     AcceptanceTest.instance.configure_rspec example
+#   end
+#
+#   config.after(:search_with_drivers => true) do |_|
+#     reset_session!
+#   end
+# end
 
 steps_for :search_with_drivers do
   include CommonSteps
 
-  # before do
-  #   AcceptanceTest.instance.configure_rspec rspec_root
-  #
-  # end
-  #
-  # after do
-  #   puts "after"
-  # end
+  before do
+    AcceptanceTest.instance.configure_rspec rspec_root
+  end
+
+  after do
+    puts "after"
+  end
 
   step "I am within wikipedia.com" do
     puts Capybara.current_driver

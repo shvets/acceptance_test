@@ -1,0 +1,1 @@
+$: << File.expand_path('spec/support')

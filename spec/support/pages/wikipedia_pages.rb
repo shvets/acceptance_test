@@ -1,8 +1,12 @@
+require 'rspec/expectations'
 require 'acceptance_test/page_set'
 
-require 'features/pages/main_page'
+require 'pages/main_page'
 
 class WikipediaPages < PageSet
+  include Capybara::DSL
+  include RSpec::Matchers
+
   attr_reader :context
 
   def initialize session, context=nil

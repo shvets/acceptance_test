@@ -29,4 +29,4 @@ Feature: Using Wikipedia
 
   Examples:
     | keyword | result |
-    | file:spec/features/data.csv ||
+    | file:spec/data.csv ||

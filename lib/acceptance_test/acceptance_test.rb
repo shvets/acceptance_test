@@ -39,12 +39,12 @@ class AcceptanceTest
     begin
       require 'capybara/rspec'
 
-      RSpec.configure do |config|
-        config.filter_run_excluding :exclude => true
+      RSpec.configure do |conf|
+        conf.filter_run_excluding :exclude => true
       end
 
-      RSpec.configure do |config|
-        config.include Capybara::DSL
+      RSpec.configure do |conf|
+        conf.include Capybara::DSL
       end
 
       RSpec::Core::ExampleGroup.send :include, Capybara::DSL
@@ -148,7 +148,7 @@ class AcceptanceTest
   end
 
   def self.supported_drivers
-    [:webkit, :selenium, :poltergeist, :selenium_remote]
+    [:webkit, :selenium, :selenium_chrome, :poltergeist, :selenium_remote]
   end
 
   def configure_rspec object=nil
@@ -193,23 +193,32 @@ class AcceptanceTest
         require "capybara-webkit"
 
       when :selenium
-        # nothing
 
-      when :selenium_with_firebug
-        require 'capybara/firebug'
+        case config[:browser]
+          when 'firefox'
+            # nothing
+          when 'firefox_with_firebug'
+            # require 'capybara/firebug'
 
-      #Capybara.register_driver :selenium_with_firebug do |app|
-      #  profile = Selenium::WebDriver::Firefox::Profile.new
-      #  profile.enable_firebug
-      #  Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile)
-      #end
-
-      #Selenium::WebDriver::Firefox::Profile.firebug_version = '1.11.2'
-      when :selenium_chrome
-        unless Capybara.drivers[:selenium_chrome]
-          Capybara.register_driver :selenium_chrome do |app|
-            Capybara::Selenium::Driver.new(app, :browser => :chrome)
-          end
+            #Capybara.register_driver :selenium_with_firebug do |app|
+            #  profile = Selenium::WebDriver::Firefox::Profile.new
+            #  profile.enable_firebug
+            #  Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile)
+            #end
+          when 'chrome'
+            unless Capybara.drivers[:selenium_chrome]
+              Capybara.register_driver :selenium_chrome do |app|
+                Capybara::Selenium::Driver.new(app, :browser => :chrome)
+              end
+            end
+          when :safari
+            unless Capybara.drivers[:selenium_safari]
+              Capybara.register_driver :selenium_safari do |app|
+                Capybara::Selenium::Driver.new(app, :browser => :safari)
+              end
+            end
+          else
+            # nothing
         end
 
       when :poltergeist
@@ -222,6 +231,24 @@ class AcceptanceTest
         end
 
       when :selenium_remote
+        case config[:browser]
+          when 'firefox'
+            Capybara.register_driver :selenium_remote do |app|
+              Capybara::Selenium::Driver.new(app, {:browser => :remote, :url => config[:selenium_url]})
+            end
+          when 'ie'
+            capabilities = Selenium::WebDriver::Remote::Capabilities.internet_explorer
+
+            Capybara.register_driver :selenium_remote do |app|
+              Capybara::Selenium::Driver.new(app,
+                                             {:browser => :remote,
+                                              :url => config[:selenium_url],
+                                              :desired_capabilities => capabilities})
+            end
+          else
+           # nothing
+        end
+
         unless Capybara.drivers[:selenium_remote]
           Capybara.register_driver :selenium_remote do |app|
             Capybara::Selenium::Driver.new(app, {:browser => :remote, :url => config[:selenium_url]})
@@ -234,12 +261,6 @@ class AcceptanceTest
             #  :url => selenium_url,
             #  :desired_capabilities => Selenium::WebDriver::Remote::Capabilities.firefox(:firefox_profile => profile)
             #})
-          end
-        end
-      when :selenium_safari
-        unless Capybara.drivers[:selenium_safari]
-          Capybara.register_driver :selenium_safari do |app|
-            Capybara::Selenium::Driver.new(app, :browser => :safari)
           end
         end
       else
@@ -285,4 +306,7 @@ class AcceptanceTest
   # ensure
   #   Socket.do_not_reverse_lookup = orig
   # end
+
+  # ip = `ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d ' ' -f2`.strip
+  # Capybara.app_host = http://#{ip}:#{Capybara.server_port}
 end

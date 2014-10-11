@@ -1,3 +1,5 @@
+AcceptanceTest.instance.create_shared_context "SearchWithTableAcceptanceTest"
+
 steps_for :search_with_table do
   step "I am within wikipedia.com" do
     self.class.include_context "SearchWithTableAcceptanceTest"

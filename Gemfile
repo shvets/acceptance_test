@@ -27,6 +27,9 @@ group :acceptance_test do
   # Debian: sudo apt-get install libqt4-dev
   # Fedora: yum install qt-webkit-devell
 
+  # for chrome support:
+  # brew install chromedriver
+
   # brew install phantomjs
   gem "poltergeist", "~> 1.5.1"
 end

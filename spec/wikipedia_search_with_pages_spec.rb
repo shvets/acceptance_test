@@ -1,16 +1,16 @@
+require 'test_helper'
+
 require 'acceptance_test'
 
 acceptance_test = AcceptanceTest.instance
 acceptance_test.configure_rspec
 acceptance_test.configure({webapp_url: "http://www.wikipedia.org", timeout_in_seconds: 10})
 
-$: << File.expand_path('spec/support')
-
-require 'wikipedia/wikipedia_page_set'
+require 'pages/wikipedia_pages'
 
 RSpec.describe 'Wikipedia Search' do
 
-  let(:page_set) { WikipediaPageSet.new(page) }
+  let(:page_set) { WikipediaPages.new(page) }
 
   before do
     puts "Using driver: #{Capybara.current_driver}."
@@ -19,11 +19,11 @@ RSpec.describe 'Wikipedia Search' do
 
   it "searches on wikipedia web site", driver: :selenium do
     page_set.execute do
-      visit_page "/"
+      visit_home_page
 
-      enter_search_request "Capybara"
+      enter_word "Capybara"
 
-      click_search_button
+      submit_request
 
       expect(page).to have_content "Hydrochoerus hydrochaeris"
     end

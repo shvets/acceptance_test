@@ -1,17 +1,17 @@
-require 'features/steps/common_steps'
-require 'features/pages/wikipedia_pages'
+require 'steps/common_steps'
+require 'pages/wikipedia_pages'
 
 RSpec.configure do |config|
-  config.before(:search_with_page => true) do |example|
+  config.before(:search_with_pages => true) do |example|
     AcceptanceTest.instance.configure_rspec example
   end
 
-  config.after(:search_with_page => true) do |_|
+  config.after(:search_with_pages => true) do |_|
     reset_session!
   end
 end
 
-steps_for :search_with_page do
+steps_for :search_with_pages do
   include CommonSteps
 
   attr_reader :page_set
