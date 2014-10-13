@@ -7,8 +7,13 @@ acceptance_test.configure({webapp_url: "http://www.wikipedia.org", timeout_in_se
 RSpec.describe 'Wikipedia Search' do
 
   before do
+    acceptance_test.setup
     puts "Using driver: #{Capybara.current_driver}."
     puts "Default wait time: #{Capybara.default_wait_time}."
+  end
+
+  after do
+    acceptance_test.teardown
   end
 
   it "uses selenium driver", driver: :selenium, exclude: false do

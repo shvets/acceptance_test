@@ -1,1 +1,0 @@
-system "bundle exec rspec -r turnip/rspec #{ARGV.join(' ')}"

@@ -1,83 +1,72 @@
 require 'uri'
-require 'fileutils'
 require 'singleton'
 
-require 'capybara'
-require "capybara/dsl"
 require 'active_support/core_ext/hash'
 
-require 'acceptance_test/gherkin_helper'
-require 'acceptance_test/turnip_helper'
+require 'acceptance_test/driver_manager'
+require 'acceptance_test/gherkin_ext'
+require 'acceptance_test/turnip_ext'
 
 class AcceptanceTest
   include Singleton
 
-  attr_reader :config
+  attr_reader :config, :driver_manager
+
+  def initialize
+    @driver_manager = DriverManager.new
+  end
 
   def configure config={}
     if config
       @config = config.kind_of?(HashWithIndifferentAccess) ? config : HashWithIndifferentAccess.new(config)
     else
       @config = HashWithIndifferentAccess.new
-
-      config[:screenshot_dir] = File.expand_path('tmp')
     end
 
-    set_app_host
+    @config[:browser] = 'firefox' unless @config[:browser]
+    @config[:screenshot_dir] = File.expand_path('tmp') unless @config[:screenshot_dir]
+  end
+
+  def setup
+    Capybara.app_host = AcceptanceTest.instance.config[:webapp_url]
 
     Capybara.configure do |conf|
       conf.default_wait_time = timeout_in_seconds
-      conf.match = :first
-
-      conf.ignore_hidden_elements = false
     end
 
-    ENV['APP_HOST'] ||= config[:webapp_url]
     ENV['WAIT_TIME'] ||= Capybara.default_wait_time.to_s
-
-    # try to load capybara-related rspec library
-    begin
-      require 'capybara/rspec'
-
-      RSpec.configure do |conf|
-        conf.filter_run_excluding :exclude => true
-      end
-
-      RSpec.configure do |conf|
-        conf.include Capybara::DSL
-      end
-
-      RSpec::Core::ExampleGroup.send :include, Capybara::DSL
-    rescue
-      ;
-    end
 
     Capybara.default_driver = :selenium
   end
 
-  def set_app_host
-    Capybara.app_host = AcceptanceTest.instance.config[:webapp_url]
+  def teardown
+    Capybara.app_host = nil
+
+    Capybara.configure do |conf|
+      conf.default_wait_time = 5
+    end
+
+    Capybara.default_driver = :rack_test
   end
 
-  def enable_external_source data_reader
-    GherkinHelper.instance.enable_external_source data_reader
-  end
+  def before_test metadata={}, page=nil
+    setup unless Capybara.app_host
 
-  def extend_turnip
-    TurnipHelper.instance.extend_turnip
-  end
+    tag = driver(metadata)
 
-  def before metadata={}
-    driver = driver(metadata)
+    if tag
+      driver_name = driver_manager.register_driver tag, config[:browser].to_sym, config[:selenium_url]
 
-    if driver
-      register_driver driver
+      if driver_name and Capybara.drivers[driver_name]
+        Capybara.current_driver = driver_name
+        Capybara.javascript_driver = driver_name
 
-      select_driver driver
+        page.instance_variable_set(:@mode, driver_name) if page
+      end
     end
   end
 
-  def after metadata={}, exception=nil, page=nil
+  def after_test metadata={}, exception=nil, page=nil
     driver = driver(metadata)
 
     if driver and exception and page and not [:webkit].include? driver
@@ -94,6 +83,7 @@ class AcceptanceTest
     end
 
     Capybara.current_driver = Capybara.default_driver
+    Capybara.javascript_driver = Capybara.default_driver
   end
 
   def create_shared_context name
@@ -120,7 +110,7 @@ class AcceptanceTest
     if tags.size > 0
       tag = tags.first.to_sym
 
-      if AcceptanceTest.supported_drivers.include? tag
+      if driver_manager.supported_drivers.include? tag
         metadata[:driver] = tag
       end
     end
@@ -128,12 +118,24 @@ class AcceptanceTest
     metadata
   end
 
+  def extend_turnip
+    shared_context_name = "#{random_name}AcceptanceTest"
+
+    create_shared_context shared_context_name
+
+    TurnipExt.shared_context_with_turnip shared_context_name
+  end
+
+  def enable_external_source data_reader
+    GherkinExt.enable_external_source data_reader
+  end
+
   def driver metadata
     driver = ENV['DRIVER'].nil? ? nil : ENV['DRIVER'].to_sym
 
     driver = metadata[:driver] if driver.nil?
 
-    self.class.supported_drivers.each do |supported_driver|
+    driver_manager.supported_drivers.each do |supported_driver|
       driver = supported_driver if metadata[supported_driver]
       break if driver
     end
@@ -143,13 +145,9 @@ class AcceptanceTest
     driver
   end
 
-  def selenium_driver? driver
-    driver.to_s =~ /selenium/
-  end
-
-  def self.supported_drivers
-    [:webkit, :selenium, :selenium_chrome, :poltergeist, :selenium_remote]
-  end
+  # def selenium_driver? driver
+  #   driver.to_s =~ /selenium/
+  # end
 
   def configure_rspec object=nil
     acceptance_test = self
@@ -165,11 +163,11 @@ class AcceptanceTest
     end
 
     rspec_conf.around(:each) do |example|
-      acceptance_test.before(example.metadata)
+      acceptance_test.before_test(example.metadata, page)
 
       example.run
 
-      acceptance_test.after(example.metadata, example.exception, page)
+      acceptance_test.after_test(example.metadata, example.exception, page)
     end
   end
 
@@ -187,113 +185,8 @@ class AcceptanceTest
     end
   end
 
-  def register_driver driver
-    case driver
-      when :webkit
-        require "capybara-webkit"
-
-      when :selenium
-
-        case config[:browser]
-          when 'firefox'
-            # nothing
-          when 'firefox_with_firebug'
-            # require 'capybara/firebug'
-
-            #Capybara.register_driver :selenium_with_firebug do |app|
-            #  profile = Selenium::WebDriver::Firefox::Profile.new
-            #  profile.enable_firebug
-            #  Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile)
-            #end
-          when 'chrome'
-            unless Capybara.drivers[:selenium_chrome]
-              Capybara.register_driver :selenium_chrome do |app|
-                Capybara::Selenium::Driver.new(app, :browser => :chrome)
-              end
-            end
-          when :safari
-            unless Capybara.drivers[:selenium_safari]
-              Capybara.register_driver :selenium_safari do |app|
-                Capybara::Selenium::Driver.new(app, :browser => :safari)
-              end
-            end
-          else
-            # nothing
-        end
-
-      when :poltergeist
-        require 'capybara/poltergeist'
-
-        unless Capybara.drivers[:poltergeist]
-          Capybara.register_driver :poltergeist do |app|
-            Capybara::Poltergeist::Driver.new(app, { debug: false })
-          end
-        end
-
-      when :selenium_remote
-        case config[:browser]
-          when 'firefox'
-            Capybara.register_driver :selenium_remote do |app|
-              Capybara::Selenium::Driver.new(app, {:browser => :remote, :url => config[:selenium_url]})
-            end
-          when 'ie'
-            capabilities = Selenium::WebDriver::Remote::Capabilities.internet_explorer
-
-            Capybara.register_driver :selenium_remote do |app|
-              Capybara::Selenium::Driver.new(app,
-                                             {:browser => :remote,
-                                              :url => config[:selenium_url],
-                                              :desired_capabilities => capabilities})
-            end
-          else
-           # nothing
-        end
-
-        unless Capybara.drivers[:selenium_remote]
-          Capybara.register_driver :selenium_remote do |app|
-            Capybara::Selenium::Driver.new(app, {:browser => :remote, :url => config[:selenium_url]})
-
-            #profile = Selenium::WebDriver::Firefox::Profile.new
-            #profile.enable_firebug
-            #
-            #Capybara::Driver::Selenium.new(app, {
-            #  :browser => :remote,
-            #  :url => selenium_url,
-            #  :desired_capabilities => Selenium::WebDriver::Remote::Capabilities.firefox(:firefox_profile => profile)
-            #})
-          end
-        end
-      else
-        # nothing
-    end
-  end
-
-  def select_driver driver
-    if selenium_driver?(driver)
-      if driver == :selenium_remote
-        Capybara.current_driver = driver
-        Capybara.javascript_driver = driver
-      else
-        if acceptance_config_exist?
-          Capybara.current_driver = driver
-          Capybara.javascript_driver = driver
-        else
-          if Capybara.drivers[driver]
-            Capybara.current_driver = driver
-            Capybara.javascript_driver = driver
-          end
-        end
-      end
-    else
-      if Capybara.drivers[driver]
-        Capybara.current_driver = driver
-        Capybara.javascript_driver = driver
-      end
-    end
-  end
-
-  def acceptance_config_exist?
-    not config.nil?
+  def random_name
+    ('a'..'z').to_a.shuffle[0, 12].join
   end
 
   # def self.get_localhost

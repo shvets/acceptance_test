@@ -12,7 +12,7 @@ end
 
 group :acceptance_test do
   gem "activesupport", "~> 4.1.6"
-  gem "capybara", "~> 2.4.1"
+  gem "capybara", "~> 2.4.3"
   gem "capybara-firebug", "~> 2.1.0"
   gem "selenium-webdriver", "~> 2.43.0"
 

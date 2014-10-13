@@ -1,11 +1,8 @@
-require 'singleton'
-
 require 'gherkin/lexer/i18n_lexer'
 
-class GherkinHelper
-  include Singleton
+class GherkinExt
 
-  def enable_external_source data_reader
+  def self.enable_external_source data_reader
     lexer = Gherkin::Lexer::I18nLexer
 
     lexer.class_eval do

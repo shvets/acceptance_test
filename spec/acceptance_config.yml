@@ -4,6 +4,6 @@ selenium_url: 'http://localhost:4444'
 
 screenshot_dir: 'tmp'
 
-browser: 'chrome'
+browser: 'firefox'
 
 timeout_in_seconds: 40

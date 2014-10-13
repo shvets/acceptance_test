@@ -9,15 +9,13 @@ class WikipediaPages < PageSet
 
   attr_reader :context
 
-  def initialize session, context=nil
+  def initialize session
     super session
-
-    @context = context
 
     @main_page = MainPage.new self
 
     delegate_to_pages :main_page
-
-    TurnipHelper.instance.build_dynamic_steps self, context
   end
+
 end
+

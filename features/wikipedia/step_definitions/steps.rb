@@ -3,10 +3,10 @@ require 'yaml'
 
 require 'acceptance_test'
 
-require 'acceptance_test/gherkin_helper'
+require 'acceptance_test/gherkin_ext'
 
 data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
-GherkinHelper.instance.enable_external_source data_reader
+GherkinExt.instance.enable_external_source data_reader
 
 acceptance_test = AcceptanceTest.instance
 

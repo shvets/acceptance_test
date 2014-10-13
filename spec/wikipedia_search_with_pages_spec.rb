@@ -3,8 +3,8 @@ require 'test_helper'
 require 'acceptance_test'
 
 acceptance_test = AcceptanceTest.instance
-acceptance_test.configure_rspec
 acceptance_test.configure({webapp_url: "http://www.wikipedia.org", timeout_in_seconds: 10})
+acceptance_test.configure_rspec
 
 require 'pages/wikipedia_pages'
 

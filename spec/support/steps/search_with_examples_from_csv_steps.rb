@@ -1,9 +1,7 @@
-AcceptanceTest.instance.create_shared_context "SearchWithExamplesFromCsvAcceptanceTest"
-
 steps_for :search_with_examples_from_csv do
 
   step "I am within wikipedia.com" do
-    self.class.include_context "SearchWithExamplesFromCsvAcceptanceTest"
+    AcceptanceTest.instance.setup
   end
 
   step "I am on wikipedia.com" do

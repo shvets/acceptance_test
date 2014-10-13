@@ -101,7 +101,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (~> 4.1.6)
-  capybara (~> 2.4.1)
+  capybara (~> 2.4.3)
   capybara-firebug (~> 2.1.0)
   capybara-webkit (~> 1.3.0)
   cucumber (~> 1.3.17)
