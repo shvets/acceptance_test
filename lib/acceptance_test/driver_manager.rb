@@ -43,10 +43,12 @@ class DriverManager
             Capybara::Poltergeist::Driver.new(app, { debug: false })
           end
         else
-          if driver_name =~ /remote/
+          if selenium_url
             properties[:browser] = :remote
             properties[:url] = selenium_url
-            properties[:desired_capabilities] = capabilities if capabilities
+            #properties[:desired_capabilities] = capabilities if capabilities
+
+            driver_name = "#{driver_name}_remote"
 
             Capybara.register_driver driver_name do |app|
               Capybara::Selenium::Driver.new(app, properties)

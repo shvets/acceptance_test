@@ -1,8 +1,13 @@
 #!/usr/bin/env rake
 
+require "rspec/core/rake_task"
+
+include Rake::DSL
+
+load "lib/tasks/rspec.rake"
+
 $LOAD_PATH.unshift File.expand_path("lib", File.dirname(__FILE__))
 
-require "rspec/core/rake_task"
 require "acceptance_test/version"
 require "gemspec_deps_gen/gemspec_deps_gen"
 

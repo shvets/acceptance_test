@@ -8,6 +8,8 @@ end
 group :test do
   gem "mocha", :require => false
   gem "rspec"
+  gem "turnip_formatter"
+  gem "gnawrnip"
 end
 
 group :acceptance_test do

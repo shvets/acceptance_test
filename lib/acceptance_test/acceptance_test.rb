@@ -14,17 +14,15 @@ class AcceptanceTest
 
   def initialize
     @driver_manager = DriverManager.new
-  end
 
-  def configure config={}
-    if config
-      @config = config.kind_of?(HashWithIndifferentAccess) ? config : HashWithIndifferentAccess.new(config)
-    else
-      @config = HashWithIndifferentAccess.new
+    @config = HashWithIndifferentAccess.new
+
+    @config[:browser] = 'firefox'
+    @config[:screenshot_dir] = File.expand_path('tmp')
     end
 
-    @config[:browser] = 'firefox' unless @config[:browser]
-    @config[:screenshot_dir] = File.expand_path('tmp') unless @config[:screenshot_dir]
+  def configure hash={}
+    config.merge!(HashWithIndifferentAccess.new(hash))
   end
 
   def setup
@@ -128,6 +126,24 @@ class AcceptanceTest
 
   def enable_external_source data_reader
     GherkinExt.enable_external_source data_reader
+  end
+
+  def configure_turnip_formatter report_name
+    require 'turnip/rspec'
+    require 'turnip_formatter'
+    require 'turnip/capybara'
+    require 'gnawrnip'
+
+    RSpec.configure do |config|
+      config.add_formatter RSpecTurnipFormatter, report_name
+      # config.add_formatter 'progress'
+      # config.add_formatter 'documentation'
+    end
+
+    Gnawrnip.configure do |c|
+      c.make_animation = true
+      c.max_frame_size = 1024 # pixel
+    end
   end
 
   def driver metadata
