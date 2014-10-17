@@ -6,10 +6,11 @@ RSpec.configure do |config|
   config.include Capybara::DSL
 end
 
-Capybara.app_host = "http://www.wikipedia.org"
-Capybara.default_driver = :selenium
-
 RSpec.describe "Searching" do
+  before do
+    Capybara.app_host = "http://www.wikipedia.org"
+    Capybara.default_driver = :selenium
+  end
 
   Steps "Result found" do
     Given "I am on wikipedia.com" do

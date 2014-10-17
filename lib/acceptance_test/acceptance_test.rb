@@ -26,12 +26,18 @@ class AcceptanceTest
     config.merge!(HashWithIndifferentAccess.new(hash))
   end
 
-  def setup page=nil, webapp_url=nil
-    # driver_name = register_driver(config[:driver], config[:browser])
-    #
-    # use_driver(driver_name, page)
+  def setup page=nil
+    driver = config[:driver] ? config[:driver].to_sym : :selenium
+    browser = config[:browser] ? config[:browser].to_sym : :firefox
+    remote = !config[:selenium_url].nil?
 
-    Capybara.app_host = webapp_url.nil? ? config[:webapp_url] : webapp_url
+   register_driver(driver, browser, remote)
+
+    driver_name = build_driver_name(driver, browser, remote)
+
+    use_driver(driver_name, page)
+
+    Capybara.app_host = config[:webapp_url]
 
     Capybara.configure do |conf|
       conf.default_wait_time = config[:timeout_in_seconds]
@@ -52,8 +58,8 @@ class AcceptanceTest
     Capybara.default_driver = :rack_test
   end
 
-  def register_driver(driver, browser=:firefox)
-    driver_name = build_driver_name(config[:driver], config[:browser], config[:selenium_url])
+  def register_driver(driver, browser=:firefox, remote=false)
+    driver_name = build_driver_name(driver, browser, remote)
 
     case driver
       when :poltergeist
@@ -80,15 +86,9 @@ class AcceptanceTest
       properties = {}
       properties[:browser] = browser
 
-      # driver_name = "#{driver}_#{browser}".to_sym
-
       Capybara.register_driver driver_name do |app|
         Capybara::Selenium::Driver.new(app, properties)
       end
-
-      Capybara.register_driver :selenium do |app|
-        Capybara::Selenium::Driver.new(app, properties)
-      end if driver.nil?
     end
 
     driver_name
@@ -124,17 +124,7 @@ class AcceptanceTest
     require 'turnip/capybara'
 
     configure_turnip_formatter report_name
-
-    #extend_turnip
   end
-
-  # def extend_turnip
-  #   shared_context_name = "#{random_name}AcceptanceTest"
-  #
-  #   create_shared_context shared_context_name
-  #
-  #   TurnipExt.shared_context_with_turnip shared_context_name
-  # end
 
   def configure_turnip_formatter report_name
     require 'turnip_formatter'
@@ -189,14 +179,14 @@ class AcceptanceTest
     end
   end
 
-  def build_driver_name driver=nil, browser=nil, selenium_url=nil
+  def build_driver_name driver, browser, remote=false
     name = ""
 
     name += driver ? "#{driver}_" : "#{Capybara.default_driver}_"
 
     name += "#{browser}_" if browser
 
-    name += "remote" if selenium_url
+    name += "remote" if remote
 
     name = name[0..name.size-2] if name[name.size-1] == "_"
 
@@ -205,7 +195,4 @@ class AcceptanceTest
     name.to_sym
   end
 
-  # def random_name
-  #   ('a'..'z').to_a.shuffle[0, 12].join
-  # end
 end

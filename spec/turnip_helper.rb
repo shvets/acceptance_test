@@ -7,8 +7,8 @@ require 'test_helper'
 require 'acceptance_test'
 
 AcceptanceTest.instance.configure(webapp_url: 'http://www.wikipedia.org')
-AcceptanceTest.instance.register_driver(:webkit)
-AcceptanceTest.instance.register_driver(:poltergeist)
+# AcceptanceTest.instance.register_driver(:webkit)
+# AcceptanceTest.instance.register_driver(:poltergeist)
 
 AcceptanceTest.instance.configure_turnip 'tmp/report.html'
 

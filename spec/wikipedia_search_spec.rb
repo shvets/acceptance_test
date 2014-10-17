@@ -11,6 +11,7 @@ RSpec.describe 'Wikipedia Search' do
 
   before do
     AcceptanceTest.instance.setup
+    AcceptanceTest.instance.use_driver(:selenium_chrome, page)
 
     puts "Using driver: #{Capybara.current_driver}."
     puts "Default wait time: #{Capybara.default_wait_time}."
@@ -21,8 +22,6 @@ RSpec.describe 'Wikipedia Search' do
   end
 
   it "uses selenium driver" do
-    AcceptanceTest.instance.use_driver(:selenium_chrome, page)
-
     visit('/')
 
     fill_in "searchInput", :with => "Capybara"
