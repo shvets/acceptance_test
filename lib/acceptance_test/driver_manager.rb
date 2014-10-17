@@ -1,5 +1,4 @@
 require 'capybara'
-#require "capybara/dsl"
 
 class DriverManager
 
@@ -33,32 +32,51 @@ class DriverManager
     [:selenium, :selenium_remote, :webkit, :poltergeist]
   end
 
-  def register_driver tag, browser, selenium_url
-    driver_name, properties = *recognize_driver(tag, browser)
+  def register_driver driver, browser, selenium_url=nil
+    driver_name = assign_driver_name(driver, browser)
 
     if driver_name
       unless Capybara.drivers[driver_name]
-        if driver_name == :poltergeist
-          Capybara.register_driver :poltergeist do |app|
-            Capybara::Poltergeist::Driver.new(app, { debug: false })
+        if selenium_url # remote
+          properties = {}
+
+          properties[:browser] = :remote
+          properties[:url] = selenium_url
+          #properties[:desired_capabilities] = capabilities if capabilities
+
+          driver_name = "#{driver_name}_remote".to_sym
+
+          Capybara.register_driver driver_name do |app|
+            Capybara::Selenium::Driver.new(app, properties)
           end
         else
-          if selenium_url
-            properties[:browser] = :remote
-            properties[:url] = selenium_url
-            #properties[:desired_capabilities] = capabilities if capabilities
+          case driver_name
+            when :poltergeist
+              require 'capybara/poltergeist'
 
-            driver_name = "#{driver_name}_remote"
+              Capybara.register_driver :poltergeist do |app|
+                Capybara::Poltergeist::Driver.new(app, { debug: false })
+              end
 
-            Capybara.register_driver driver_name do |app|
-              Capybara::Selenium::Driver.new(app, properties)
-            end
-          else
-            properties[:browser] = browser
+            when :webkit
+              require "capybara-webkit"
 
-            Capybara.register_driver driver_name do |app|
-              Capybara::Selenium::Driver.new(app, properties)
-            end
+            when :firefox_with_firebug
+              require 'capybara/firebug'
+
+              # profile = Selenium::WebDriver::Firefox::Profile.new
+              # profile.enable_firebug
+              #
+              # properties[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.firefox(:firefox_profile => profile)
+              #properties[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.internet_explorer
+
+            else
+              properties = {}
+              properties[:browser] = browser
+
+              Capybara.register_driver driver_name do |app|
+                Capybara::Selenium::Driver.new(app, properties)
+              end
           end
         end
       end
@@ -67,74 +85,53 @@ class DriverManager
     driver_name
   end
 
-  private
+  def assign_driver_name driver, browser
+    case driver
+      when :webkit
+        :webkit
 
-  def recognize_driver tag, browser
-    properties = {}
+      when :selenium
 
-    driver_name =
-        case tag
-          when :webkit
-            require "capybara-webkit"
+        case browser
+          when :firefox
+            :selenium_firefox
 
-            :webkit
+          when :firefox_with_firebug
+            :selenium_firefox_with_firebug
 
-          when :selenium
+          when :chrome
+            :selenium_chrome
 
-            case browser
-              when :firefox
-                :selenium_firefox
+          when :safari
+            :selenium_safari
 
-              when :firefox_with_firebug
-                require 'capybara/firebug'
+          when :ie, :internet_explorer
+            :selenium_ie
 
-                :selenium_firefox_with_firebug
-
-              when :chrome
-                :selenium_chrome
-
-              when :safari
-                :selenium_safari
-
-              when :ie, :internet_explorer
-                :selenium_ie
-
-              else
-                :unsupported
-            end
-
-          when :poltergeist
-            require 'capybara/poltergeist'
-
-            :poltergeist
-
-          when :selenium_remote
-            case browser
-              when :firefox
-                :selenium_remote_firefox
-
-              when :firefox_with_firebug
-                require 'capybara/firebug'
-
-                profile = Selenium::WebDriver::Firefox::Profile.new
-                profile.enable_firebug
-
-                properties[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.firefox(:firefox_profile => profile)
-
-                :selenium_remote_firefox_with_firebug
-
-              when :ie
-                properties[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.internet_explorer
-
-                :selenium_remote_ie
-              else
-                :unsupported
-            end
           else
             :unsupported
         end
 
-    [driver_name, properties]
+      when :poltergeist
+        :poltergeist
+
+      when :selenium_remote
+        case browser
+          when :firefox
+            :selenium_remote_firefox
+
+          when :firefox_with_firebug
+            :selenium_remote_firefox_with_firebug
+
+          when :ie
+            :selenium_remote_ie
+
+          else
+            :unsupported
+        end
+      else
+        :unsupported
+    end
   end
 
 end

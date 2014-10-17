@@ -4,9 +4,9 @@ steps_for :search_with_drivers do
   include CommonSteps
 
   step "I am within wikipedia.com" do
-    puts Capybara.current_driver
-
     AcceptanceTest.instance.setup
+
+    puts Capybara.current_driver
   end
 
   step "I am on wikipedia.com" do

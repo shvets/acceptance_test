@@ -1,10 +1,12 @@
 webapp_url: 'http://www.wikipedia.org'
 
 #selenium_url: 'http://localhost:4444/wd/hub'
-selenium_url: 'http://10.111.74.226:4444/wd/hub'
+#selenium_url: 'http://10.111.74.226:4444/wd/hub'
 
 screenshot_dir: 'tmp'
 
-browser: 'firefox'
+browser: 'chrome'
+
+#driver: 'selenium'
 
 timeout_in_seconds: 40

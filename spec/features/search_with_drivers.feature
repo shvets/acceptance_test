@@ -4,7 +4,6 @@ Feature: Using Wikipedia
     Given I am within wikipedia.com
 
   @selenium
-  @chrome
   @search_with_drivers
   Scenario: Searching with selenium for a term with submit
 
