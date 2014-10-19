@@ -36,9 +36,9 @@ group :acceptance_test do
   gem "poltergeist", "~> 1.5.1"
 end
 
-group :debug do
-  gem "debugger-ruby_core_source"
-  gem "ruby-debug-base19x", "0.11.30.pre12"
-  gem "ruby-debug-ide", "0.4.17"
-end
+# group :debug do
+  # gem "debugger-ruby_core_source"
+  # gem "ruby-debug-base19x", "0.11.30.pre12"
+  # gem "ruby-debug-ide", "0.4.17"
+# end
 

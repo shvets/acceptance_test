@@ -7,8 +7,6 @@ steps_for :search_with_pages do
   attr_reader :page_set
 
   step "I am within wikipedia.com" do
-    AcceptanceTest.instance.setup
-
     puts Capybara.current_driver
 
     @page_set = WikipediaPages.new(page)

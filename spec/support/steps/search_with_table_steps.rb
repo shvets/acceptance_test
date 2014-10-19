@@ -1,6 +1,5 @@
 steps_for :search_with_table do
   step "I am within wikipedia.com" do
-    AcceptanceTest.instance.setup
   end
 
   step "I am on wikipedia.com" do

@@ -1,15 +1,6 @@
-# require 'acceptance_test'
+require 'acceptance_test'
+require 'rspec/expectations'
 
-# acceptance_test = AcceptanceTest.instance
-# acceptance_test.configure({webapp_url: "http://www.wikipedia.org", timeout_in_seconds: 10})
-# acceptance_test.configure_rspec
-
-# require "capybara"
-# require 'selenium/webdriver'
-#
-# RSpec.configure do |config|
-#   config.include Capybara::DSL
-# end
 
 # profile = Selenium::WebDriver::Chrome::Profile.new
 # # profile['download.prompt_for_download'] = false
@@ -25,31 +16,15 @@
 #
 # # ENV['webdriver.chrome.driver'] = "c:\work\selenium-server\chromedriver.exe"
 # #properties[:desired_capabilities]['webdriver.chrome.driver'] = "c:\work\selenium-server\chromedriver.exe"
-#
-# Capybara.register_driver :selenium_remote do |app|
-#   Capybara::Selenium::Driver.new(app, properties)
-# end
-#
-# Capybara.app_host = "http://www.wikipedia.org"
-# Capybara.default_driver = :selenium_remote
 
-
-# Capybara.register_driver :selenium_chrome do |app|
-#   Capybara::Selenium::Driver.new(app, browser: :chrome)
-# end
-#
-# Capybara.app_host = "http://www.wikipedia.org"
-# Capybara.default_driver = :selenium_chrome
-
-require 'acceptance_test'
-
-AcceptanceTest.instance.configure({webapp_url: 'http://www.wikipedia.org', timeout_in_seconds: 10})
+AcceptanceTest.instance.configure({webapp_url: 'http://www.wikipedia.org', timeout_in_seconds: 10,
+                                   driver: :selenium, browser: :chrome})
 
 require 'test_helper'
 require 'pages/wikipedia_pages'
 
 RSpec.describe 'Wikipedia Search' do
-  AcceptanceTest.instance.add_expectations(self)
+  include Capybara::DSL
 
   let(:page_set) { WikipediaPages.new(page) }
 

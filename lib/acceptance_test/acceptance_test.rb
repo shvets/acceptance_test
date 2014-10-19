@@ -1,16 +1,18 @@
 require 'singleton'
+require 'capybara'
 require 'active_support/core_ext/hash'
 
+require 'acceptance_test/shared_context_builder'
+require 'acceptance_test/driver_manager'
 require 'acceptance_test/gherkin_ext'
+require 'acceptance_test/turnip_ext'
 
 class AcceptanceTest
   include Singleton
 
-  attr_reader :config
+  attr_reader :config, :driver_manager
 
   def initialize
-    require 'capybara'
-
     Capybara.default_driver = :selenium
 
     @config = HashWithIndifferentAccess.new
@@ -19,23 +21,20 @@ class AcceptanceTest
     @config[:screenshot_dir] = File.expand_path('tmp')
     @config[:timeout_in_seconds] = 20
 
-    init
+    @driver_manager = DriverManager.new
   end
 
   def configure hash={}
     config.merge!(HashWithIndifferentAccess.new(hash))
   end
 
-  def setup page=nil
-    driver = config[:driver] ? config[:driver].to_sym : :selenium
-    browser = config[:browser] ? config[:browser].to_sym : :firefox
-    remote = !config[:selenium_url].nil?
+  def setup page=nil, metadata={}
+    driver = driver(metadata)
+    browser = browser(metadata)
 
-   register_driver(driver, browser, remote)
+    driver_name = driver_manager.register_driver(driver, browser, config[:selenium_url])
 
-    driver_name = build_driver_name(driver, browser, remote)
-
-    use_driver(driver_name, page)
+    driver_manager.use_driver(driver_name, page)
 
     Capybara.app_host = config[:webapp_url]
 
@@ -48,71 +47,42 @@ class AcceptanceTest
     end
   end
 
-  def teardown
+  def teardown page=nil, metadata={}, exception=nil
+    driver = driver(metadata)
+
+    if driver and exception and page and not [:webkit].include? driver
+      screenshot_dir = File.expand_path(config[:screenshot_dir])
+
+      FileUtils.mkdir_p screenshot_dir
+
+      screenshot_maker = ScreenshotMaker.new screenshot_dir
+
+      screenshot_maker.make page, metadata
+
+      puts metadata[:full_description]
+      puts "Screenshot: #{screenshot_maker.screenshot_url(metadata)}"
+    end
+
     Capybara.app_host = nil
 
     Capybara.configure do |conf|
       conf.default_wait_time = 2
     end
 
-    Capybara.default_driver = :rack_test
+    Capybara.current_driver = Capybara.default_driver
+    Capybara.javascript_driver = Capybara.default_driver
   end
 
-  def register_driver(driver, browser=:firefox, remote=false)
-    driver_name = build_driver_name(driver, browser, remote)
-
-    case driver
-      when :poltergeist
-        require 'capybara/poltergeist'
-
-      when :webkit
-        require "capybara-webkit"
-
-      when :firefox_with_firebug
-        require 'capybara/firebug'
-
-      else
-      ;
-    end
-
-    if driver == :poltergeist
-      properties = {}
-      properties[:debug] = false
-
-      Capybara.register_driver :poltergeist do |app|
-        Capybara::Poltergeist::Driver.new(app, properties)
-      end
-    else
-      properties = {}
-      properties[:browser] = browser
-
-      Capybara.register_driver driver_name do |app|
-        Capybara::Selenium::Driver.new(app, properties)
-      end
-    end
-
-    driver_name
+  def create_shared_context name
+    SharedContextBuilder.instance.build name, self
   end
 
-  # profile = Selenium::WebDriver::Firefox::Profile.new
-  # profile.enable_firebug
-  #
-  # properties[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.firefox(:firefox_profile => profile)
-  #properties[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.internet_explorer
+  def extend_turnip
+    shared_context_name = "#{random_name}AcceptanceTest"
 
-  def use_driver driver, page=nil
-    if driver and Capybara.drivers[driver]
-      Capybara.current_driver = driver
-      Capybara.javascript_driver = driver
+    SharedContextBuilder.instance.build shared_context_name, self
 
-      page.instance_variable_set(:@mode, driver) if page
-    end
-  end
-
-  def add_expectations context
-    require 'rspec/expectations'
-
-    context.send :include, Capybara::DSL
+    TurnipExt.shared_context_with_turnip shared_context_name
   end
 
   def enable_external_source data_reader
@@ -124,6 +94,8 @@ class AcceptanceTest
     require 'turnip/capybara'
 
     configure_turnip_formatter report_name
+
+    extend_turnip
   end
 
   def configure_turnip_formatter report_name
@@ -142,57 +114,44 @@ class AcceptanceTest
     Gnawrnip.ready!
   end
 
-  def metadata_from_scenario scenario
-    tags = scenario.source_tag_names.collect { |a| a.gsub("@", '') }
-
-    metadata = {}
-
-    if tags.size > 0
-      tag = tags.first.to_sym
-
-      if driver_manager.supported_drivers.include? tag
-        metadata[:driver] = tag
-      end
-    end
-
-    metadata
-  end
-
   private
 
-  def init
-    # try to load capybara-related rspec library
-    begin
-      require 'capybara/rspec'
+  def driver metadata
+    driver = ENV['DRIVER'].nil? ? nil : ENV['DRIVER'].to_sym
 
-      RSpec.configure do |conf|
-        conf.filter_run_excluding :exclude => true
-      end
+    driver = config[:driver].to_sym if driver.nil? and config[:driver]
 
-      RSpec.configure do |conf|
-        conf.include Capybara::DSL
-      end
+    driver = metadata[:driver] if driver.nil?
 
-      RSpec::Core::ExampleGroup.send :include, Capybara::DSL
-    rescue
-      ;
-    end
+    driver_manager.supported_drivers.each do |supported_driver|
+      driver = supported_driver if metadata[supported_driver]
+      break if driver
+    end if driver.nil?
+
+    driver = :webkit if driver.nil?
+
+    driver
   end
 
-  def build_driver_name driver, browser, remote=false
-    name = ""
+  def browser metadata
+    browser = ENV['BROWSER'].nil? ? nil : ENV['BROWSER'].to_sym
 
-    name += driver ? "#{driver}_" : "#{Capybara.default_driver}_"
+    browser = config[:browser].to_sym if browser.nil?
 
-    name += "#{browser}_" if browser
+    browser = metadata[:browser] if browser.nil?
 
-    name += "remote" if remote
+    driver_manager.supported_browsers.each do |supported_browser|
+      browser = supported_browser if metadata[supported_browser]
+      break if browser
+    end if browser.nil?
 
-    name = name[0..name.size-2] if name[name.size-1] == "_"
+    browser = :firefox if browser.nil?
 
-    name = "unsupported" if name.size == 0
+    browser
+  end
 
-    name.to_sym
+  def random_name
+    ('a'..'z').to_a.shuffle[0, 12].join
   end
 
 end

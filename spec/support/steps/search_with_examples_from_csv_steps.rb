@@ -7,7 +7,6 @@ AcceptanceTest.instance.enable_external_source data_reader
 steps_for :search_with_examples_from_csv do
 
   step "I am within wikipedia.com" do
-    AcceptanceTest.instance.setup
   end
 
   step "I am on wikipedia.com" do

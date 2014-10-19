@@ -1,17 +1,18 @@
+require 'rspec/expectations'
 require 'acceptance_test'
 
 AcceptanceTest.instance.configure({webapp_url: 'http://www.wikipedia.org', timeout_in_seconds: 10})
 
-AcceptanceTest.instance.register_driver(:selenium, :chrome)
-AcceptanceTest.instance.register_driver(:webkit)
-AcceptanceTest.instance.register_driver(:poltergeist)
+AcceptanceTest.instance.driver_manager.register_driver(:selenium, :chrome)
+AcceptanceTest.instance.driver_manager.register_driver(:webkit)
+AcceptanceTest.instance.driver_manager.register_driver(:poltergeist)
 
 RSpec.describe 'Wikipedia Search' do
-  AcceptanceTest.instance.add_expectations(self)
+  include Capybara::DSL
 
   before do
     AcceptanceTest.instance.setup
-    AcceptanceTest.instance.use_driver(:selenium_chrome, page)
+    AcceptanceTest.instance.driver_manager.use_driver(:selenium_chrome)
 
     puts "Using driver: #{Capybara.current_driver}."
     puts "Default wait time: #{Capybara.default_wait_time}."
