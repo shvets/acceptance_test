@@ -6,15 +6,19 @@ class PageSet
   extend Forwardable
 
   attr_reader :pages
-  attr_accessor :session
+  attr_accessor :context
 
-  def initialize session=nil
-    @session = session
+  def initialize context
+    @context = context
     @pages = []
   end
 
-  def page
-    session
+  # def page
+  #   context.page
+  # end
+
+  def session
+    context.page
   end
 
   def execute &code
@@ -28,7 +32,7 @@ class PageSet
   end
 
   def delegate_to_page page
-    @pages << page
+    pages << page
 
     self.class.send :attr_reader, page
 
@@ -41,25 +45,31 @@ class PageSet
     clazz.instance_methods - Page.instance_methods
   end
 
-  def enable_smart_completion context
-    if context
-      context.class.send(:define_method, :method_missing) do |method_name, *args, &block|
-        page_set.send method_name, *args, &block
+  def enable_smart_completion
+    context.class.send(:define_method, :method_missing) do |method_name, *args, &block|
+      page_set.send method_name, *args, &block
+    end
+
+    page_set = self
+
+    PageSet.class_eval do
+      @page_set = page_set # class instance variable
+
+      def self.page_set # access to class instance variable
+        @page_set
       end
+    end
 
-      page_set = self
+    pages.each do |page|
+      page_methods(page).each do |method_name|
+        method = page_set.method(method_name)
 
-      pages.each do |page|
-        page_methods(page).each do |method_name|
-          method = page_set.method(method_name)
+        context.class.step "I #{method_name.to_s.gsub('_', ' ')}" do |*args|
+          page_set.send method_name, *args
+        end
 
-          context.class.step "I #{method_name.to_s.gsub('_', ' ')}" do |*args|
-            page_set.send method_name, *args
-          end
-
-          context.class.step "#{method.to_s.gsub('_', ' ')}" do
-            page_set.send method_name, *args
-          end
+        context.class.step "#{method.to_s.gsub('_', ' ')}" do
+          page_set.send method_name, *args
         end
       end
     end

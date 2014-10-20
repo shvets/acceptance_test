@@ -26,7 +26,7 @@ require 'pages/wikipedia_pages'
 RSpec.describe 'Wikipedia Search' do
   include Capybara::DSL
 
-  let(:page_set) { WikipediaPages.new(page) }
+  let(:page_set) { WikipediaPages.new(self) }
 
   before do
     AcceptanceTest.instance.setup

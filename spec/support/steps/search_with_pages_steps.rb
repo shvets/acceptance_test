@@ -9,9 +9,9 @@ steps_for :search_with_pages do
   step "I am within wikipedia.com" do
     puts Capybara.current_driver
 
-    @page_set = WikipediaPages.new(page)
+    @page_set = WikipediaPages.new(self)
 
-    page_set.enable_smart_completion(self)
+    page_set.enable_smart_completion
   end
 
   step :visit_home_page, "I am on wikipedia.com"
