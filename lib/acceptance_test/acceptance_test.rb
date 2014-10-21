@@ -154,4 +154,17 @@ class AcceptanceTest
     ('a'..'z').to_a.shuffle[0, 12].join
   end
 
+  # def self.get_localhost
+  #   orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true  # turn off reverse DNS resolution temporarily
+  #
+  #   UDPSocket.open do |s|
+  #     s.connect '192.168.1.1', 1
+  #     s.addr.last
+  #   end
+  # ensure
+  #   Socket.do_not_reverse_lookup = orig
+  # end
+
+  # ip = `ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d ' ' -f2`.strip
+  # Capybara.app_host = http://#{ip}:#{Capybara.server_port}
 end

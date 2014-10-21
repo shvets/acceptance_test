@@ -1,10 +1,20 @@
+require 'csv'
+
 # enable external source for gherkin
 
-data_reader = lambda {|source_path| CSV.read(File.expand_path(source_path)) }
+data_reader = lambda do |source_path|
+  ext = File.extname(source_path)
+
+  if ext == '.csv'
+    CSV.read(File.expand_path(source_path))
+  elsif ext == '.yml'
+    YAML.load_file(File.expand_path(source_path))
+  end
+end
 
 AcceptanceTest.instance.enable_external_source data_reader
 
-steps_for :search_with_examples_from_csv do
+steps_for :search_with_scenario_outline do
 
   step "I am within wikipedia.com" do
   end

@@ -19,7 +19,7 @@ AcceptanceTest.instance.configure_turnip 'tmp/report.html'
 
 require 'steps/search_with_drivers_steps'
 require 'steps/search_with_pages_steps'
-require 'steps/search_with_examples_from_csv_steps'
+require 'steps/search_with_scenario_outline_steps'
 require 'steps/search_with_table_steps'
 
 

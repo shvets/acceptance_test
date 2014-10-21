@@ -26,19 +26,17 @@ class GherkinExt
 
           source.each_line do |line|
             if line =~ /file\s?:/
-              source_path = line.gsub('file:', '').gsub('|', '').strip
+              part1, part2 = line.split(",")
+
+              source_path = part1.gsub('file:', '').gsub('|', '').strip
+              key = part2 ? part2.gsub('key:', '').gsub('|', '').strip : nil
 
               if source_path
                 values = self.data_reader.call(source_path)
 
-                values.each do |row|
-                  new_source += "  |"
+                data = key.nil? ? values : values[key]
 
-                  row.each do |element|
-                    new_source += " #{element} |"
-                  end
-                  new_source += "\n"
-                end
+                new_source += build_data_section data
               end
             else
               new_source += line
@@ -51,6 +49,22 @@ class GherkinExt
         else
           source
         end
+      end
+
+      def self.build_data_section values
+        buffer = ""
+
+        values.each do |row|
+          buffer += "  |"
+
+          row.each do |element|
+            buffer += " #{element} |"
+          end
+
+          buffer += "\n"
+        end
+
+        buffer
       end
     end
   end
