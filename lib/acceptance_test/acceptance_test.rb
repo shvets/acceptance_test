@@ -90,22 +90,24 @@ class AcceptanceTest
   end
 
   def configure_turnip report_name
-    require 'turnip/rspec'
-    require 'turnip/capybara'
-
     configure_turnip_formatter report_name
 
-    extend_turnip
+    configure_gnawrnip
   end
 
   def configure_turnip_formatter report_name
     require 'turnip_formatter'
-    require 'gnawrnip'
 
     RSpec.configure do |config|
       config.add_formatter RSpecTurnipFormatter, report_name
     end
 
+    TurnipFormatter.configure do |config|
+      config.title = 'Acceptance'
+    end
+  end
+
+  def configure_gnawrnip
     Gnawrnip.configure do |c|
       c.make_animation = true
       c.max_frame_size = 1024 # pixel

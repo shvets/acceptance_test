@@ -17,7 +17,7 @@ class ScreenshotMaker
     filename = File.basename(options[:file_path])
     line_number = options[:line_number]
 
-    name = "screenshot-#{filename}"
+    name = filename
     name += "-#{line_number}" if line_number
 
     "#{name}.png"

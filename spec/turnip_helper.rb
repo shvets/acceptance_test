@@ -6,6 +6,9 @@ require 'test_helper'
 
 require 'acceptance_test'
 
+require 'turnip/capybara'
+require 'gnawrnip'
+
 config_name = File.expand_path("spec/acceptance_config.yml")
 config = config_name ? HashWithIndifferentAccess.new(YAML.load_file(config_name)) : {}
 
