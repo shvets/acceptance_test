@@ -10,7 +10,7 @@ require 'acceptance_test/turnip_ext'
 class AcceptanceTest
   include Singleton
 
-  attr_reader :config, :driver_manager
+  attr_reader :config, :screenshot_maker, :driver_manager
 
   def initialize
     Capybara.default_driver = :selenium
@@ -20,6 +20,8 @@ class AcceptanceTest
     @config[:browser] = 'firefox'
     @config[:screenshot_dir] = File.expand_path('tmp')
     @config[:timeout_in_seconds] = 20
+
+    @screenshot_maker = ScreenshotMaker.new config[:screenshot_dir]
 
     @driver_manager = DriverManager.new
   end
@@ -55,7 +57,7 @@ class AcceptanceTest
 
       FileUtils.mkdir_p screenshot_dir
 
-      screenshot_maker = ScreenshotMaker.new screenshot_dir
+      screenshot_maker.screenshot_dir = screenshot_dir
 
       screenshot_maker.make page, metadata
 

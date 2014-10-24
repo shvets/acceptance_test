@@ -1,5 +1,5 @@
 class ScreenshotMaker
-  attr_reader :basedir
+  attr_accessor :basedir
 
   def initialize basedir
     @basedir = basedir
