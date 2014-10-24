@@ -16,6 +16,8 @@ class GherkinExt
 
       def scan(source)
         old_scan self.class.modify_source(source)
+      rescue
+        pust "Error in #{source} file."
       end
 
       private
