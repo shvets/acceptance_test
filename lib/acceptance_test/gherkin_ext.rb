@@ -16,7 +16,7 @@ class GherkinExt
 
       def scan(source)
         old_scan self.class.modify_source(source)
-      rescue
+      rescue Exception => e
         unless e.kind_of? Gherkin::Parser::ParseError
           puts "Error while parsing gherkin file:"
           puts "  Error: #{e.message}"
