@@ -32,7 +32,7 @@ class GherkinExt
           new_source = ""
 
           source.each_line do |line|
-            if line =~ /file\s?:/
+            if line =~ /file\s?:/ and line.strip[0] != "#"
               part1, part2 = line.split(",")
 
               source_path = part1.gsub('file:', '').gsub('|', '').strip
