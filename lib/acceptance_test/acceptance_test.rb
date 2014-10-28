@@ -53,11 +53,7 @@ class AcceptanceTest
     driver = driver(metadata)
 
     if driver and exception and page and not [:webkit].include? driver
-      screenshot_dir = File.expand_path(config[:screenshot_dir])
-
-      FileUtils.mkdir_p screenshot_dir
-
-      screenshot_maker.basedir = screenshot_dir
+      screenshot_maker.basedir = File.expand_path(config[:screenshot_dir])
 
       screenshot_maker.make page, metadata
 

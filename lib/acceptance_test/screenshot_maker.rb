@@ -6,6 +6,8 @@ class ScreenshotMaker
   end
 
   def make page, options
+    FileUtils.mkdir_p basedir
+
     file_path = options[:file_path]
 
     name = screenshot_name(build_name(file_path), options[:line_number])
