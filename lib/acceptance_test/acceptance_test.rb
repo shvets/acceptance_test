@@ -57,7 +57,7 @@ class AcceptanceTest
 
       FileUtils.mkdir_p screenshot_dir
 
-      screenshot_maker.screenshot_dir = screenshot_dir
+      screenshot_maker.basedir = screenshot_dir
 
       screenshot_maker.make page, metadata
 
