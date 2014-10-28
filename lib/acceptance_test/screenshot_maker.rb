@@ -6,30 +6,50 @@ class ScreenshotMaker
   end
 
   def make page, options
-    name = screenshot_name(File.basename(options[:file_path]), options[:line_number])
+    file_path = options[:file_path]
+
+    name = screenshot_name(build_name(file_path), options[:line_number])
     path = File.expand_path("#{basedir}/#{name}")
 
     page.save_screenshot(path)
   end
 
-  def screenshot_name filename, line_number=nil
-    "#{filename}#{line_number ? '-'+line_number : ''}.png"
-  end
-
   def screenshot_url options
     file_path = options[:file_path]
 
-    if file_path =~ /http:/ or file_path =~ /https:/ or file_path =~ /ftp:/
-      name = screenshot_name(File.basename(options[:file_path]), options[:line_number])
+    if options[:screenshot_url_base]
+      name = screenshot_name(build_name(file_path), options[:line_number])
 
-      "#{file_path}/#{name}"
+      "#{options[:screenshot_url_base]}/#{name}"
     else
-      name = screenshot_name(File.basename(options[:file_path]), options[:line_number])
+      name = screenshot_name(build_name(file_path), options[:line_number])
 
       path = File.expand_path("#{basedir}/#{name}")
 
       "file:///#{path}"
     end
+  end
+
+  private
+
+  def screenshot_name name, line_number=nil
+    "#{name}#{line_number ? '-'+line_number.to_s : ''}.png"
+  end
+
+  def build_name path
+    full_path = File.expand_path(path)
+    extension = File.extname(path)
+
+    index1 = full_path.index("/spec")
+    index2 = full_path.index(extension)
+
+    name = full_path[index1+1..index2-1].gsub("/", "_")
+
+    name = name[5..-1] if name =~ /^spec_/
+    name = name[9..-1] if name =~ /^features_/
+    name = name[11..-1] if name =~ /^acceptance_/
+
+    name
   end
 
 end
