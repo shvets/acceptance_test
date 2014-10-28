@@ -38,16 +38,21 @@ class ScreenshotMaker
 
   def build_name path
     full_path = File.expand_path(path)
-    extension = File.extname(path)
 
-    index1 = full_path.index("/spec")
-    index2 = full_path.index(extension)
+    spec_index = full_path.index("/spec")
 
-    name = full_path[index1+1..index2-1].gsub("/", "_")
+    if spec_index
+      extension = File.extname(path)
+      ext_index = extension.size == 0 ? -1 : full_path.index(extension)-1
 
-    name = name[5..-1] if name =~ /^spec_/
-    name = name[9..-1] if name =~ /^features_/
-    name = name[11..-1] if name =~ /^acceptance_/
+      name = full_path[spec_index+1..ext_index].gsub("/", "_")
+
+      name = name[5..-1] if name =~ /^spec_/
+      name = name[9..-1] if name =~ /^features_/
+      name = name[11..-1] if name =~ /^acceptance_/
+    else
+      name = path
+    end
 
     name
   end
