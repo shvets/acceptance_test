@@ -5,17 +5,14 @@ require 'acceptance_test/page'
 class PageSet
   extend Forwardable
 
-  attr_reader :pages
   attr_accessor :context
+  attr_reader :pages, :input
 
   def initialize context
     @context = context
     @pages = []
+    @input = {}
   end
-
-  # def page
-  #   context.page
-  # end
 
   def session
     context.page
@@ -23,6 +20,23 @@ class PageSet
 
   def execute &code
     self.instance_eval &code
+  end
+
+  def self.step title
+    yield if block_given?
+  end
+
+  def step title
+    values = []
+
+    params = title.gsub(/:\w+/)
+
+    params.each do |param|
+      key = param.gsub(":", "").to_sym
+      values << input[key] if input[key]
+    end
+
+    yield *values if block_given?
   end
 
   def delegate_to_pages *pages
