@@ -28,11 +28,11 @@ class GherkinExt
       private
 
       def self.modify_source source
-        if source =~ /file\s?:/
+        if check_file_tag(source)
           new_source = ""
 
           source.each_line do |line|
-            if line =~ /file\s?:/ and line.strip[0] != "#"
+            if check_file_tag(line) and line.strip[0] != "#"
               part1, part2 = line.split(",")
 
               source_path = part1.gsub('file:', '').gsub('|', '').strip
@@ -56,6 +56,12 @@ class GherkinExt
         else
           source
         end
+      end
+
+      def self.check_file_tag text
+        encoded_text = text.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+
+        encoded_text =~ /file\s?:/
       end
 
       def self.build_data_section values

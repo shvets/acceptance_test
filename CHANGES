@@ -212,3 +212,7 @@
 == Version 1.8.1
 
 * Adding StepsGenerator class
+
+== Version 1.8.2
+
+* Fix issue with encoding
