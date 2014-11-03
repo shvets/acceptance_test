@@ -1,5 +1,6 @@
 require 'forwardable'
 
+require 'meta_methods/dsl_builder'
 require 'acceptance_test/page'
 
 class PageSet
@@ -19,7 +20,7 @@ class PageSet
   end
 
   def execute &code
-    self.instance_eval &code
+    MetaMethods::DslBuilder.instance.evaluate_dsl(self, nil, code)
   end
 
   def self.step title

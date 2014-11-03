@@ -216,3 +216,7 @@
 == Version 1.8.2
 
 * Fix issue with encoding
+
+== Version 1.8.3
+
+* Using Dsl builder
