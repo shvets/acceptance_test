@@ -4,3 +4,17 @@
     ["Wombat",   "quadrupedal marsupials", "2"],
     ["Echidna",  "Tachyglossidae", "3"]
   ]
+
+"test2":
+  -
+    keyword: "Capybara"
+    result: "Hydrochoerus hydrochaeris"
+    something_else: "1"
+  -
+    keyword: "Wombat"
+    result: "quadrupedal marsupials"
+    something_else: "2"
+  -
+    keyword: "Echidna"
+    result: "Tachyglossidae"
+    something_else: "3"

@@ -11,6 +11,6 @@ Feature: Using Wikipedia
     And I click submit button
     Then I should see "<result>"
 
-  Examples:
-    | keyword | result | something_else |
-    | file:spec/data.csv ||             |
+    Examples:
+      | keyword | result | something_else |
+      | file:spec/data.csv ||             |

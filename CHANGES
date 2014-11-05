@@ -220,3 +220,7 @@
 == Version 1.8.3
 
 * Using Dsl builder
+
+== Version 1.8.4
+
+* Letting scenario outline read from hash

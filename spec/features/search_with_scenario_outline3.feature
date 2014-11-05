@@ -11,6 +11,6 @@ Feature: Using Wikipedia
     And I click submit button
     Then I should see "<result>"
 
-  Examples:
-    | keyword | result |something_else |
-    | file:spec/data.yml, key:test1 || |
+    Examples:
+      | keyword | result |something_else |
+      | file:spec/data.yml, key:test1 || |

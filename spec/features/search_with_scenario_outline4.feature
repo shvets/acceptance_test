@@ -4,15 +4,12 @@ Feature: Using Wikipedia
     Given I am within wikipedia.com
 
   @search_with_scenario_outline
-  Scenario Outline: Searching with selenium for a term with submit (embedded data)
+  Scenario Outline: Searching with selenium for a term with submit (external data)
 
     Given I am on wikipedia.com
     When I enter word <keyword>
     And I click submit button
     Then I should see "<result>"
 
-    Examples:
-      | keyword  | result |
-      | Capybara | Hydrochoerus hydrochaeris |
-      | Wombat   | quadrupedal marsupials    |
-      | Echidna  | Tachyglossidae |
+  Examples:
+    | file:spec/data.yml, key:test2 |

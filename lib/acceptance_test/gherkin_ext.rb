@@ -43,7 +43,11 @@ class GherkinExt
 
                 data = key.nil? ? values : values[key]
 
-                new_source += build_data_section data
+                if data.size > 0
+                  new_source += build_data_section data
+                else
+                  new_source += line
+                end
               end
             else
               new_source += line
@@ -64,14 +68,28 @@ class GherkinExt
         encoded_text =~ /file\s?:/
       end
 
-      def self.build_data_section values
+      def self.build_data_section rows, build_titles=true
         buffer = ""
 
-        values.each do |row|
+        if build_titles and rows.first.kind_of?(Hash)
+          buffer += "  |"
+
+          rows.first.each do |element|
+            buffer += " #{element[0]} |"
+          end
+
+          buffer += "\n"
+        end
+
+        rows.each do |row|
           buffer += "  |"
 
           row.each do |element|
-            buffer += " #{element} |"
+            if element.kind_of? Array
+              buffer += " #{element[1]} |"
+            else
+              buffer += " #{element} |"
+            end
           end
 
           buffer += "\n"

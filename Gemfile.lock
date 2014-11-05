@@ -45,6 +45,7 @@ GEM
       turnip_formatter (~> 0.3.2)
     i18n (0.6.11)
     json (1.8.1)
+    meta_methods (1.2.0)
     metaclass (0.0.4)
     mime-types (2.4.1)
     mini_portile (0.6.0)
@@ -117,6 +118,7 @@ DEPENDENCIES
   gemcutter
   gemspec_deps_gen
   gnawrnip
+  meta_methods (~> 1.2.0)
   mocha
   poltergeist (~> 1.5.1)
   rspec
