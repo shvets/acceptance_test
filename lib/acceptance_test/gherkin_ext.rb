@@ -43,9 +43,11 @@ class GherkinExt
 
                 data = key.nil? ? values : values[key]
 
-                if data.size > 0
+                if data && data.size > 0
                   new_source += build_data_section data
                 else
+                  puts "Cannot find source for #{key}."
+
                   new_source += line
                 end
               end
