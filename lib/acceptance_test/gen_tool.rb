@@ -1,12 +1,12 @@
 require 'singleton'
 
-class StepsGenerator
+class GenTool
   include Singleton
 
-  def generate file_name
+  def generate_steps feature_file_name
     keywords_exp = /^(Given|When|Then|And|But)/
 
-    File.open(file_name).each_line do |line|
+    File.open(feature_file_name).each_line do |line|
       line = line.strip
 
       if line !~ /^#/ and line =~ keywords_exp
@@ -50,6 +50,22 @@ class StepsGenerator
 
         print "\n\n"
         print "end\n"
+      end
+    end
+  end
+
+  def generate_feature spec_file_name
+    keywords_exp = /step\s+('|")(.*)('|")/
+
+    File.open(spec_file_name).each_line do |line|
+      line = line.strip
+
+      if line =~ keywords_exp
+        if line =~ /^#/
+          puts "# " + line.scan(keywords_exp)[0][1]
+        else
+          puts line.scan(keywords_exp)[0][1]
+        end
       end
     end
   end

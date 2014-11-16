@@ -10,6 +10,8 @@ $LOAD_PATH.unshift File.expand_path("lib", File.dirname(__FILE__))
 
 require "acceptance_test/version"
 require "gemspec_deps_gen/gemspec_deps_gen"
+require "acceptance_test/gen_tool"
+require "acceptance_test/diff_tool"
 
 version = AcceptanceTest::VERSION
 project_name = File.basename(Dir.pwd)
@@ -46,82 +48,45 @@ end
 #   system "cp -R ~/debugger-ruby_core_source/lib $GEM_HOME/gems/debugger-ruby_core_source-1.2.3"
 # end
 
-task :steps_gen do
+task :gen_steps do
   if ARGV.size < 2
-    puts "Usage: rake steps_gen <file_name.feature>"
+    puts "Usage: rake gen_steps <file_name.feature>"
   else
     ARGV.shift
 
     file_name = ARGV.shift
 
-    StepsGenerator.instance.generate file_name
+    GenTool.instance.generate_steps file_name
   end
 end
 
-task :steps_diff do
-  if ARGV.size < 3
-    puts "Usage: rake steps_diff <file_name.feature> <file_name_spec.rb>"
+task :gen_feature do
+  if ARGV.size < 2
+    puts "Usage: rake gen_feature <file_name_with_steps_spec.rb>"
   else
     ARGV.shift
 
-    file_name1 = ARGV.shift
-    file_name2 = ARGV.shift
+    file_name = ARGV.shift
 
-#    StepsGenerator.instance.generate file_name
+    GenTool.instance.generate_feature file_name
+  end
+end
 
-    phrases1 = []
+task :diff_steps do
+  if ARGV.size < 3
+    puts "Usage: rake diff_steps <file_name.feature> <file_name_with_steps_spec.rb>"
+  else
+    ARGV.shift
 
-    keywords_exp1 = /^(Given|When|Then|And|But)/
+    source = ARGV.shift
+    target = ARGV.shift
 
-    File.open(file_name1).each_line do |line|
-      line = line.strip
+    # source = "spec/features/search_with_pages.feature"
+    # target = "spec/acceptance/search_with_steps_spec.rb"
 
-      if line !~ /^#/ and line =~ keywords_exp1
-        word = line.scan(keywords_exp1)[0][0]
+    # source = ARGV.shift
+    # target = source.gsub("features", "acceptance").gsub(".feature", "_spec.rb")
 
-        phrases1 << line[word.size..-1].strip
-      end
-    end
-
-    phrases2 = []
-
-    keywords_exp2 = /step\s+('|")(.*)('|")/
-
-    File.open(file_name2).each_line do |line|
-      line = line.strip
-
-      if line !~ /^#/ and line =~ keywords_exp2
-        phrases2 << line.scan(keywords_exp2)[0][1]
-      end
-    end
-
-    phrases1.each_with_index do |phrase, index|
-      phrase1 = phrase.clone.gsub("\"", "'")
-      phrase2 = phrases2[index]
-
-      params = phrase2.gsub(/:\w+\S/).to_a
-
-      params.each do |param|
-        new_param = param.gsub(":", "")
-
-        phrase1.gsub!(%r{<#{new_param}>}, param)
-      end
-
-      # p phrase1
-      params.each do |param|
-        phrase1.gsub!(/(\w|\s)*/, param)
-      end
-      # p phrase1
-
-      if phrase1 != phrase2
-        puts "Fail:"
-        puts "  {#{phrase}}"
-        puts "  {#{phrases2[index]}}"
-      else
-        # puts "OK:"
-        # puts "  {#{phrase}}"
-        # puts "  {#{phrases2[index]}}"
-      end
-    end
+    DiffTool.instance.diff source, target
   end
 end

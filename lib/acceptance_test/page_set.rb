@@ -7,12 +7,11 @@ class PageSet
   extend Forwardable
 
   attr_accessor :context
-  attr_reader :pages, :input
+  attr_reader :pages
 
   def initialize context
     @context = context
     @pages = []
-    @input = {}
   end
 
   def session
@@ -21,23 +20,6 @@ class PageSet
 
   def execute &code
     MetaMethods::DslBuilder.instance.evaluate_dsl(self, nil, code)
-  end
-
-  def self.step title
-    yield if block_given?
-  end
-
-  def step title
-    values = []
-
-    params = title.gsub(/:\w+/)
-
-    params.each do |param|
-      key = param.gsub(":", "").to_sym
-      values << input[key] if input[key]
-    end
-
-    yield *values if block_given?
   end
 
   def delegate_to_pages *pages
