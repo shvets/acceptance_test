@@ -28,15 +28,15 @@ RSpec.describe 'Wikipedia Search' do
 
   let(:page_set) { WikipediaPages.new(self) }
 
-  before do
-    AcceptanceTest.instance.setup
+  before do |example|
+    AcceptanceTest.instance.setup page, example.metadata
 
     puts "Using driver: #{Capybara.current_driver}."
     puts "Default wait time: #{Capybara.default_wait_time}."
   end
 
-  after do
-    AcceptanceTest.instance.teardown
+  after do |example|
+    AcceptanceTest.instance.teardown page, example.metadata
   end
 
   it "searches on wikipedia web site" do

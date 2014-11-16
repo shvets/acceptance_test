@@ -23,10 +23,6 @@ RSpec.describe 'Wikipedia Search' do
     puts "Capybara current driver: #{Capybara.current_driver}"
   end
 
-  after do
-    AcceptanceTest.instance.teardown
-  end
-
   it "uses selenium driver" do
     visit('/')
 
