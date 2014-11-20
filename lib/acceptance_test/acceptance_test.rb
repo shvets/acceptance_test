@@ -18,10 +18,10 @@ class AcceptanceTest
     @config = HashWithIndifferentAccess.new
 
     @config[:browser] = 'firefox'
-    @config[:screenshot_dir] = File.expand_path('tmp')
+    @config[:screenshots_dir] = File.expand_path('tmp')
     @config[:timeout_in_seconds] = 20
 
-    @screenshot_maker = ScreenshotMaker.new config[:screenshot_dir]
+    @screenshot_maker = ScreenshotMaker.new config[:screenshots_dir]
 
     @driver_manager = DriverManager.new
   end
@@ -53,7 +53,7 @@ class AcceptanceTest
     driver = driver(metadata)
 
     if driver and exception and page and not [:webkit].include? driver
-      screenshot_maker.basedir = File.expand_path(config[:screenshot_dir])
+      screenshot_maker.basedir = File.expand_path(config[:screenshots_dir])
 
       screenshot_maker.make page, metadata
 

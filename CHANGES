@@ -232,3 +232,7 @@
 == Version 1.8.6
 
 * Bug fix
+
+== Version 1.9.0
+
+* Rename screenshot_dir to screenshots_dir
