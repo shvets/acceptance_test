@@ -236,3 +236,7 @@
 == Version 1.9.0
 
 * Rename screenshot_dir to screenshots_dir
+
+== Version 1.9.1
+
+* Correct report name

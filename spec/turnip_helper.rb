@@ -27,7 +27,7 @@ RSpec.configure do |conf|
     # acceptance_test.register_driver(:webkit)
     # acceptance_test.register_driver(:poltergeist)
 
-    acceptance_test.configure_turnip 'tmp/report.html'
+    acceptance_test.configure_turnip 'tmp/report.html', "test"
 
     acceptance_test.setup
   end
