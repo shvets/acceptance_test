@@ -240,3 +240,7 @@
 == Version 1.9.1
 
 * Correct report name
+
+== Version 1.9.2
+
+* Accept capabilities for remote selenium driver
