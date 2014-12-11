@@ -29,7 +29,7 @@ class DriverManager
     [:firefox, :chrome]
   end
 
-  def register_driver(driver, browser=:firefox, selenium_url=nil)
+  def register_driver(driver, browser=:firefox, selenium_url=nil, capabilities=nil)
     driver_name = build_driver_name(driver, browser, selenium_url)
 
     case driver
@@ -61,7 +61,7 @@ class DriverManager
       if selenium_url
         properties[:browser] = :remote
         properties[:url] = selenium_url
-        #properties[:desired_capabilities] = capabilities if capabilities
+        properties[:desired_capabilities] = capabilities if capabilities
 
         # profile = Selenium::WebDriver::Firefox::Profile.new
         # profile.enable_firebug

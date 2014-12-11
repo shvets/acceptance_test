@@ -34,7 +34,7 @@ class AcceptanceTest
     driver = driver(metadata)
     browser = browser(metadata)
 
-    driver_name = driver_manager.register_driver(driver, browser, config[:selenium_url])
+    driver_name = driver_manager.register_driver(driver, browser, config[:selenium_url], config[:capabilities])
 
     driver_manager.use_driver(driver_name, page)
 
