@@ -9,8 +9,9 @@ class PageSet
   attr_accessor :context
   attr_reader :pages
 
-  def initialize context
+  def initialize context, smart_completion=true
     @context = context
+    @smart_completion = smart_completion
     @pages = []
   end
 
@@ -26,6 +27,8 @@ class PageSet
     pages.each do |page|
       delegate_to_page page
     end
+
+    enable_smart_completion if @smart_completion
   end
 
   def delegate_to_page page

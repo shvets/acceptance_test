@@ -9,14 +9,12 @@ class WikipediaPages < PageSet
 
   attr_reader :context
 
-  def initialize session, smart_completion=true
-    super session
+  def initialize session
+    super session, true
 
     @main_page = MainPage.new self
 
     delegate_to_pages :main_page
-
-    enable_smart_completion if smart_completion
   end
 
 end
