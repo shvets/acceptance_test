@@ -244,3 +244,7 @@
 == Version 1.9.2
 
 * Accept capabilities for remote selenium driver
+
+== Version 1.9.3
+
+* Adding smart completion feature
