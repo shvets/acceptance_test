@@ -61,14 +61,32 @@ class DriverManager
       if selenium_url
         properties[:browser] = :remote
         properties[:url] = selenium_url
-        properties[:desired_capabilities] = capabilities if capabilities
 
+        case browser
+          when :firefox
         # profile = Selenium::WebDriver::Firefox::Profile.new
         # profile.enable_firebug
-        #
-        # properties[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.firefox(:firefox_profile => profile)
-        #properties[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.internet_explorer
+            # capabilities = Selenium::WebDriver::Remote::Capabilities.firefox(:firefox_profile => profile)
 
+            caps = Selenium::WebDriver::Remote::Capabilities.firefox
+          when :chrome
+            caps = Selenium::WebDriver::Remote::Capabilities.chrome
+          else
+            ;
+        end
+
+        desired_capabilities =
+          if caps
+            capabilities.each do |key, value|
+              caps[key] = value
+            end if capabilities
+
+            caps
+          elsif capabilities
+            capabilities
+          end
+
+        properties[:desired_capabilities] = desired_capabilities if desired_capabilities
       else
         properties[:browser] = browser
       end

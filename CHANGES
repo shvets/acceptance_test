@@ -252,3 +252,7 @@
 == Version 1.9.4
 
 * Bug fix
+
+== Version 1.9.5
+
+* Fix issue with remote selenium and chrome
