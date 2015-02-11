@@ -260,3 +260,7 @@
 == Version 1.9.6
 
 * Adding the ability to provide executable path for firefox and chrome
+
+== Version 1.9.7
+
+* Bug fix

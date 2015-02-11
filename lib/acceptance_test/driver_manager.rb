@@ -109,13 +109,15 @@ class DriverManager
   end
 
   def setup_browser_binary driver_name, browser_binaries
-    case driver_name
-      when :firefox
-        Selenium::WebDriver::Firefox::Binary.path = browser_binaries[driver_name]
-      when :chrome
-        Selenium::WebDriver::Chrome::Service.Service.executable_path = browser_binaries[driver_name]
-      else
-        ;
+    if browser_binaries && browser_binaries[driver_name]
+      case driver_name
+        when :firefox
+          Selenium::WebDriver::Firefox::Binary.path = browser_binaries[driver_name]
+        when :chrome
+          Selenium::WebDriver::Chrome::Service.Service.executable_path = browser_binaries[driver_name]
+        else
+          ;
+      end
     end
   end
 
