@@ -1,12 +1,16 @@
-webapp_url: 'http://www.wikipedia.org'
+webapp_url: http://www.wikipedia.org
 
-#selenium_url: 'http://localhost:4444/wd/hub'
-#selenium_url: 'http://10.111.74.226:4444/wd/hub'
+#selenium_url: http://localhost:4444/wd/hub
+#selenium_url: http://10.111.74.226:4444/wd/hub
 
-screenshots_dir: 'tmp'
+screenshots_dir: tmp
 
-browser: 'chrome'
+browser: chrome
 
-driver: 'selenium'
+driver: selenium
 
 timeout_in_seconds: 40
+
+#browser_binaries:
+#  firefox: /Applications/Firefox.app/Contents/MacOS/firefox-bin
+#  chrome: /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome

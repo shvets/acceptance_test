@@ -38,6 +38,8 @@ class AcceptanceTest
 
     driver_manager.use_driver(driver_name, page)
 
+    driver_manager.setup_browser_binary config[:browser].to_sym, config[:browser_binaries]
+
     Capybara.app_host = config[:webapp_url]
 
     Capybara.configure do |conf|

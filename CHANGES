@@ -256,3 +256,7 @@
 == Version 1.9.5
 
 * Fix issue with remote selenium and chrome
+
+== Version 1.9.6
+
+* Adding the ability to provide executable path for firefox and chrome
