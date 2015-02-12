@@ -6,7 +6,7 @@ class ScreenshotMaker
   end
 
   def make page, options
-    FileUtils.mkdir_p basedir
+    FileUtils.mkdir_p basedir unless File.exist? basedir
 
     file_path = options[:file_path]
 
