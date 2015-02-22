@@ -10,7 +10,7 @@ class WikipediaPages < PageSet
   attr_reader :context
 
   def initialize session
-    super session, true
+    super session
 
     @main_page = MainPage.new self
 

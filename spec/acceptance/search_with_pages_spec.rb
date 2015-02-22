@@ -1,6 +1,10 @@
 require 'acceptance_test'
 require 'rspec/expectations'
+require 'capybara/rspec'
 
+RSpec::configure do |config|
+  config.include Capybara::RSpecMatchers
+end
 
 # profile = Selenium::WebDriver::Chrome::Profile.new
 # # profile['download.prompt_for_download'] = false
@@ -26,7 +30,7 @@ require 'pages/wikipedia_pages'
 RSpec.describe 'Wikipedia Search' do
   include Capybara::DSL
 
-  let(:page_set) { WikipediaPages.new(self) }
+  let(:pages) { WikipediaPages.new(self) }
 
   before do |example|
     AcceptanceTest.instance.setup page, example.metadata
@@ -40,7 +44,7 @@ RSpec.describe 'Wikipedia Search' do
   end
 
   it "searches on wikipedia web site" do
-    page_set.execute do
+    pages.execute do
       visit_home_page
 
       enter_word "Capybara"

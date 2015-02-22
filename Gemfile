@@ -5,21 +5,20 @@ group :development do
   gem "gemcutter"
 end
 
-group :test do
-  gem "mocha", :require => false
+group :test, :default do
   gem "rspec"
-  gem "turnip_formatter"
-  gem "gnawrnip"
 end
 
-group :acceptance_test do
+group :default do
+  gem "turnip_formatter"
+  gem "gnawrnip"
+
   gem "activesupport", "~> 4.1.6"
   gem "capybara", "~> 2.4.4"
   gem "capybara-firebug", "~> 2.1.0"
   gem "selenium-webdriver", "~> 2.43.0"
 
   gem "capybara-webkit", "~> 1.3.1"
-  gem "cucumber", "~> 1.3.17"
   gem "rspec-example_steps", "~> 3.0.2"
   gem "turnip", "~> 1.2.4"
   gem "meta_methods", "~> 1.2.0"
@@ -35,6 +34,10 @@ group :acceptance_test do
 
   # brew install phantomjs
   gem "poltergeist", "~> 1.5.1"
+end
+
+group "test" do
+  gem "cucumber", "~> 1.3.17"
 end
 
 # group :debug do
