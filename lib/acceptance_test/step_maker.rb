@@ -2,8 +2,10 @@ module StepMaker
 
   attr_reader :input
 
-  def initialize
+  def initialize *params
     @input = {}
+
+    super
   end
 
   def step title

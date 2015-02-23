@@ -10,20 +10,8 @@ group :test, :default do
 end
 
 group :default do
-  gem "turnip_formatter"
-  gem "gnawrnip"
-
-  gem "activesupport", "~> 4.1.6"
-  gem "capybara", "~> 2.4.4"
-  gem "capybara-firebug", "~> 2.1.0"
-  gem "selenium-webdriver", "~> 2.43.0"
-
-  gem "capybara-webkit", "~> 1.3.1"
-  gem "rspec-example_steps", "~> 3.0.2"
-  gem "turnip", "~> 1.2.4"
-  gem "meta_methods", "~> 1.2.0"
-
-  # Note: You need to install qt:
+  # Note: for capybara-webkit you need to install qt first:
+  #
   # Mac: brew install qt
   # Ubuntu: sudo apt-get install libqt4-dev libqtwebkit-dev
   # Debian: sudo apt-get install libqt4-dev
@@ -32,12 +20,27 @@ group :default do
   # for chrome support:
   # brew install chromedriver
 
+  # Note: for poltergeist you have to install phantomjs first
   # brew install phantomjs
-  gem "poltergeist", "~> 1.5.1"
+
+  gem "turnip", "~> 1.2.4"
+  gem "capybara", "~> 2.4.4"
+  gem "capybara-webkit", "~> 1.4.1"
+  gem "selenium-webdriver", "~> 2.44.0"
+  gem "capybara-firebug", "~> 2.1.0"
+  gem "poltergeist", "~> 1.6.0"
+
+  gem "turnip_formatter", "~> 0.3.3"
+  gem "gnawrnip", "~> 0.3.2"
+
+  gem "activesupport", "~> 4.2.0"
+
+  gem "rspec-example_steps", "~> 3.0.2"
+  gem "meta_methods", "~> 1.3.0"
 end
 
 group "test" do
-  gem "cucumber", "~> 1.3.17"
+  gem "cucumber"
 end
 
 # group :debug do

@@ -272,3 +272,7 @@
 == Version 1.9.9
 
 * Change scope for dependent gems
+
+== Version 1.9.10
+
+* Update dependencies
