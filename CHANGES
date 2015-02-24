@@ -276,3 +276,7 @@
 == Version 1.9.10
 
 * Update dependencies
+
+== Version 1.9.11
+
+* Exclude capybara-webkit for windows
