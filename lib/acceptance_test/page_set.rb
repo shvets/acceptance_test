@@ -75,10 +75,34 @@ class PageSet
     end
   end
 
+  def detect_pages scope
+    pages_classes = scope.constants.select do |class_name|
+      clazz = scope.const_get(class_name)
+
+      clazz.ancestors.include? Page
+    end
+
+    pages_classes.collect do |class_name|
+      clazz = scope.const_get(class_name)
+
+      object = clazz.new self
+
+      name = underscore(class_name.to_s)
+
+      self.instance_variable_set("@#{name}", object)
+
+      name
+    end
+  end
+
   private
 
   def camelize string
     string.split("_").each {|s| s.capitalize! }.join("")
+  end
+
+  def underscore string
+    string.scan(/[A-Z][a-z]*/).join("_").downcase
   end
 
 end

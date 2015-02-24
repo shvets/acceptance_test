@@ -14,7 +14,7 @@ class WikipediaPages < PageSet
 
     @main_page = MainPage.new self
 
-    delegate_to_pages :main_page
+    delegate_to :main_page
   end
 
 end

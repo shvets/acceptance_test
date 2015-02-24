@@ -284,3 +284,7 @@
 == Version 1.9.12
 
 * Exclude capybara-webkit for windows
+
+== Version 1.9.13
+
+* Add method to dynamically detect pages
