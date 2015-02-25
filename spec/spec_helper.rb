@@ -3,6 +3,7 @@ require 'csv'
 require 'active_support/core_ext/hash'
 
 $: << File.expand_path('spec/support')
+$: << File.expand_path('spec/wikipedia/support')
 
 require 'acceptance_test'
 
@@ -18,7 +19,7 @@ acceptance_test = AcceptanceTest.instance
 
 RSpec.configure do |conf|
   conf.before(:type => :feature) do
-    config_name = File.expand_path("spec/acceptance_config.yml")
+    config_name = File.expand_path("spec/wikipedia/acceptance_config.yml")
     config = config_name ? HashWithIndifferentAccess.new(YAML.load_file(config_name)) : {}
 
     acceptance_test.configure(config)
