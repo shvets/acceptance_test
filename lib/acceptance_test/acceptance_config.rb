@@ -1,31 +1,30 @@
 require 'singleton'
 require 'yaml'
 require 'csv'
+require 'selenium/webdriver'
 require 'active_support/core_ext/hash'
 require 'acceptance_test'
 
-require 'turnip/capybara'
 require 'gnawrnip'
 
 class AcceptanceConfig
   include Singleton
 
-  def configure app_name=nil
+  def configure workspace, app_name=nil
     @app_name = app_name
 
-    load_support_code "spec"
+    load_support_code workspace
 
     acceptance_test = AcceptanceTest.instance
 
-    #acceptance_test.enable_external_source data_reader # enable external source for gherkin
+    acceptance_test.enable_external_source data_reader # enable external source for gherkin
+
+    acceptance_config = acceptance_config_file ? HashWithIndifferentAccess.new(YAML.load_file(acceptance_config_file)) : {}
+
+    acceptance_test.configure(acceptance_config)
 
     RSpec.configure do |config|
-       config_file = acceptance_config_file(app_name)
-       acceptance_config = config_file ? HashWithIndifferentAccess.new(YAML.load_file(config_file)) : {}
-
-      acceptance_test.configure(acceptance_config)
-
-      acceptance_test.configure_turnip 'tmp/report.html', "test"
+      configure_turnip
 
       config.before(:type => :feature) do |example|
         acceptance_test.setup page, example.metadata
@@ -49,11 +48,68 @@ class AcceptanceConfig
     ENV['ACCEPTANCE_ENV'].nil? ? "development" : ENV['ACCEPTANCE_ENV']
   end
 
-  def acceptance_config_file app_name
-    ENV['CONFIG_FILE'] ? File.expand_path(ENV['CONFIG_FILE']) : detect_file("acceptance_config", app_name, ".yml")
+  def format
+    ENV['FORMAT'].nil? ? "xlsx" : ENV['FORMAT']
+  end
+
+  def acceptance_config_file
+    ENV['CONFIG_FILE'] ? File.expand_path(ENV['CONFIG_FILE']) : detect_file("acceptance_config", "#{app_name}.yml")
+  end
+
+  def acceptance_data_file name="#{app_name}.#{format}"
+    ENV['DATA_DIR'] ? detect_file(ENV['DATA_DIR'], name) : detect_file("acceptance_data", name)
+  end
+
+  def screenshots_dir
+    AcceptanceTest.instance.config[:screenshots_dir]
+  end
+
+  def upload_dir
+    AcceptanceTest.instance.config[:upload_dir]
+  end
+
+  def upload_dev_dir
+    AcceptanceTest.instance.config[:upload_dev_dir]
   end
 
   private
+
+  def configure_turnip
+    report_file = turnip_report_file(app_name)
+
+    configure_turnip_formatter report_file, app_name
+
+    configure_gnawrnip
+  end
+
+  def configure_turnip_formatter report_file, report_name
+    require 'turnip_formatter'
+
+    RSpec.configure do |config|
+      config.add_formatter RSpecTurnipFormatter, report_file
+    end
+
+    TurnipFormatter.configure do |config|
+      config.title = "#{report_name[0].upcase+report_name[1..-1]} Acceptance"
+    end
+  end
+
+  def configure_gnawrnip
+    Gnawrnip.configure do |c|
+      c.make_animation = true
+      c.max_frame_size = 1024 # pixel
+    end
+
+    Gnawrnip.ready!
+  end
+
+  def turnip_report_file name=nil
+    name = ENV['TURNIP_REPORT_PREFIX'] if ENV['TURNIP_REPORT_PREFIX']
+
+    file_name = name.nil? ? "acceptance-report.html" : "#{name}-acceptance-report.html"
+
+    File.expand_path("tmp/#{file_name}")
+  end
 
   def load_support_code basedir
     target = nil
@@ -82,26 +138,47 @@ class AcceptanceConfig
     end
  end
 
-  def detect_file dir, app_type, ext
-    path1 = "#{dir}/#{app_type}-#{environment}#{ext}"
-    path2 = "#{dir}/#{app_type}#{ext}"
+  def detect_file dir, name
+    ext = File.extname(name)
+    basename = File.basename(name)
+    basename = basename[0..basename.size-ext.size-1]
 
-    full_path = File.expand_path(path1)
+    path1 = "#{dir}/#{basename}-#{environment}#{ext}"
+    path2 = "#{dir}/#{basename}#{ext}"
 
-    File.exist?(full_path) ? full_path : File.expand_path(path2)
+    full_path1 = File.expand_path(path1)
+    full_path2 = File.expand_path(path2)
+
+    File.exist?(full_path1) ? full_path1 : full_path2
   end
 
   def data_reader
     lambda do |source_path|
-      ext = File.extname(source_path)
+      path = acceptance_data_file detect_file_from_script(source_path)
+
+      puts "Reading data from: #{path}"
+
+      ext = File.extname(path)
 
       if ext == '.csv'
-        CSV.read(File.expand_path(source_path))
+        CSV.read(File.expand_path(path))
       elsif ext == '.yml'
-        YAML.load_file(File.expand_path(source_path))
+        YAML.load_file(File.expand_path(path))
       end
     end
   end
 
-end
+  def detect_file_from_script source_path
+    path = source_path % {acceptance_env: environment, format: format}
 
+    if File.exist? File.expand_path(path)
+      path
+    else
+      dir = File.dirname(source_path)
+      name = File.basename(source_path).gsub("-", '')
+      source_path = (dir == ".") ? name : "#{dir}/#{name}"
+
+      (source_path % {acceptance_env: '', format: format})
+    end
+  end
+end

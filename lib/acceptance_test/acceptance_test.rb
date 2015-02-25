@@ -89,33 +89,6 @@ class AcceptanceTest
     GherkinExt.enable_external_source data_reader
   end
 
-  def configure_turnip report_file, report_name
-    configure_turnip_formatter report_file, report_name
-
-    configure_gnawrnip
-  end
-
-  def configure_turnip_formatter report_file, report_name
-    require 'turnip_formatter'
-
-    RSpec.configure do |config|
-      config.add_formatter RSpecTurnipFormatter, report_file
-    end
-
-    TurnipFormatter.configure do |config|
-      config.title = "#{report_name[0].upcase+report_name[1..-1]} Acceptance"
-    end
-  end
-
-  def configure_gnawrnip
-    Gnawrnip.configure do |c|
-      c.make_animation = true
-      c.max_frame_size = 1024 # pixel
-    end
-
-    Gnawrnip.ready!
-  end
-
   private
 
   def driver metadata

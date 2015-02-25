@@ -7,6 +7,7 @@ end
 
 group :test, :default do
   gem "rspec"
+  gem "capybara-webkit", "~> 1.4.1"
 end
 
 group :default do
@@ -25,7 +26,6 @@ group :default do
 
   gem "turnip", "~> 1.2.4"
   gem "capybara", "~> 2.4.4"
-  gem "capybara-webkit", "~> 1.4.1", platforms: [:ruby]
   gem "selenium-webdriver", "~> 2.44.0"
   gem "capybara-firebug", "~> 2.1.0"
   gem "poltergeist", "~> 1.6.0"

@@ -12,4 +12,4 @@ Feature: Using Wikipedia
     Then I should see "<result>"
 
   Examples:
-    | file:spec/wikipedia/data.yml, key:test2 |
+    | file:data.yml, key:test2 |

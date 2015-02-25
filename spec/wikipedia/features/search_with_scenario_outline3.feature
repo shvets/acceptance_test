@@ -13,4 +13,4 @@ Feature: Using Wikipedia
 
     Examples:
       | keyword | result |something_else |
-      | file:spec/wikipedia/data.yml, key:test1 || |
+      | file:data.yml, key:test1 || |
