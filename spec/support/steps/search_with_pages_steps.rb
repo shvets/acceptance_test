@@ -1,5 +1,5 @@
 require 'steps/common_steps'
-require 'pages/wikipedia_pages'
+require 'wikipedia_pages'
 
 steps_for :search_with_pages do
   include CommonSteps

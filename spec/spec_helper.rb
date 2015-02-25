@@ -2,7 +2,7 @@ require 'yaml'
 require 'csv'
 require 'active_support/core_ext/hash'
 
-require 'test_helper'
+$: << File.expand_path('spec/support')
 
 require 'acceptance_test'
 
