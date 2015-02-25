@@ -24,7 +24,7 @@ end
 AcceptanceTest.instance.configure({webapp_url: 'http://www.wikipedia.org', timeout_in_seconds: 10,
                                    driver: :selenium, browser: :chrome})
 
-require 'test_helper'
+require 'spec_helper'
 require 'pages/wikipedia_pages'
 
 RSpec.describe 'Wikipedia Search' do

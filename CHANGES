@@ -288,3 +288,7 @@
 == Version 1.9.13
 
 * Add method to dynamically detect pages
+
+== Version 1.10.0
+
+* Adding acceptance_config

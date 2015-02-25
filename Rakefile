@@ -90,3 +90,10 @@ task :diff_steps do
     DiffTool.instance.diff source, target
   end
 end
+
+task :turnip do
+  # result = system "CONFIG_FILE=workspace/wikipedia/acceptance_config.yml rspec -r acceptd/acceptance_config -r turnip/rspec workspace/wikipedia/features/search_with_drivers.feature"
+  result = system "CONFIG_FILE=spec/wikipedia/acceptance_config.yml rspec -r acceptance_test/acceptance_config -r turnip/rspec spec/wikipedia/features/search_with_drivers.feature"
+
+  puts result
+end

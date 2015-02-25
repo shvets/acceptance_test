@@ -1,3 +1,3 @@
 class AcceptanceTest
-  VERSION = "1.9.13"
+  VERSION = "1.10.0"
 end

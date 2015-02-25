@@ -38,6 +38,13 @@ RSpec.configure do |conf|
   end
 end
 
+# ENV['CONFIG_FILE'] = "spec/wikipedia/acceptance_config.yml"
+#
+# require 'acceptance_test/acceptance_config'
+#
+# AcceptanceConfig.instance.configure "wikipedia"
+
+
 
 
 
