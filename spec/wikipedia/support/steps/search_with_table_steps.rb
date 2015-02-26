@@ -1,7 +1,9 @@
 steps_for :search_with_table do
-  step "I am within wikipedia.com" do
-  end
+  def initialize *params
+    puts Capybara.current_driver
 
+    super
+  end
   step "I am on wikipedia.com" do
     visit('/')
   end

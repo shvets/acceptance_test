@@ -1,8 +1,5 @@
 Feature: Using Wikipedia
 
-  Background: within wikipedia.com context
-    Given I am within wikipedia.com
-
   @search_with_scenario_outline
   Scenario Outline: Searching with selenium for a term with submit (external data)
 

@@ -3,8 +3,10 @@ require 'steps/common_steps'
 steps_for :search_with_drivers do
   include CommonSteps
 
-  step "I am within wikipedia.com" do
+  def initialize *params
     puts Capybara.current_driver
+
+    super
   end
 
   step "I am on wikipedia.com" do
