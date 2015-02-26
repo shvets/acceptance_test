@@ -4,6 +4,7 @@ steps_for :search_with_table do
 
     super
   end
+
   step "I am on wikipedia.com" do
     visit('/')
   end
