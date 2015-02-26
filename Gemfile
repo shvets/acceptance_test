@@ -3,10 +3,6 @@ source "https://rubygems.org"
 group :development do
   gem "gemspec_deps_gen"
   gem "gemcutter"
-end
-
-group :test, :default do
-  gem "rspec"
   gem "capybara-webkit", "~> 1.4.1"
 end
 
@@ -24,6 +20,7 @@ group :default do
   # Note: for poltergeist you have to install phantomjs first
   # brew install phantomjs
 
+  gem "rspec"
   gem "turnip", "~> 1.2.4"
   gem "capybara", "~> 2.4.4"
   gem "selenium-webdriver", "~> 2.44.0"
