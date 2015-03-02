@@ -84,6 +84,10 @@ class AcceptanceConfig
     AcceptanceTest.instance.config[:results_dir]
   end
 
+  def local_env?
+    !!(AcceptanceTest.instance.config[:webapp_url] =~ /localhost/)
+  end
+
   private
 
   def configure_turnip
