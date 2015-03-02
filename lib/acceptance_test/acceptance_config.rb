@@ -20,7 +20,6 @@ class AcceptanceConfig
     acceptance_test.enable_external_source data_reader # enable external source for gherkin
 
     acceptance_config = acceptance_config_file ? HashWithIndifferentAccess.new(YAML.load_file(acceptance_config_file)) : {}
-
     acceptance_test.configure(acceptance_config)
 
     RSpec.configure do |config|
@@ -33,7 +32,9 @@ class AcceptanceConfig
       config.after(:type => :feature) do |example|
         extra_metadata = {}
 
-        extra_metadata[:screenshot_url_base] = acceptance_config[:screenshot_url_base] if acceptance_config[:screenshot_url_base]
+        screenshot_url_base = AcceptanceTest.instance.config[:screenshot_url_base]
+
+        extra_metadata[:screenshot_url_base] = screenshot_url_base if screenshot_url_base
 
         acceptance_test.teardown page, example.metadata.merge(extra_metadata), example.exception
       end
