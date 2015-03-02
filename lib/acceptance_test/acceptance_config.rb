@@ -60,6 +60,10 @@ class AcceptanceConfig
     ENV['DATA_DIR'] ? detect_file(ENV['DATA_DIR'], name) : detect_file("acceptance_data", name)
   end
 
+  def acceptance_results_file name="#{app_name}.#{format}"
+    ENV['RESULTS_DIR'] ? detect_file(ENV['RESULTS_DIR'], name) : detect_file("acceptance_results", name)
+  end
+
   def screenshots_dir
     AcceptanceTest.instance.config[:screenshots_dir]
   end
@@ -70,6 +74,10 @@ class AcceptanceConfig
 
   def upload_dev_dir
     AcceptanceTest.instance.config[:upload_dev_dir]
+  end
+
+  def acceptance_results_dir
+    AcceptanceTest.instance.config[:results_dir]
   end
 
   private
@@ -133,8 +141,10 @@ class AcceptanceConfig
     $: << File.expand_path("#{basedir}/support")
     $: << File.expand_path(support_dir)
 
-    Dir.entries("#{support_dir}/steps").each do |name|
-      require "steps/#{File.basename(name)}" unless [".", ".."].include? name
+    Dir.glob("#{support_dir}/**/steps/*_steps.rb").each do |name|
+      ext = File.extname(name)
+
+      require name[support_dir.length+1..name.length-ext.length-1]
     end
  end
 
