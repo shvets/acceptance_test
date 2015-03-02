@@ -128,37 +128,21 @@ class AcceptanceConfig
   end
 
   def load_support_code basedir
-    target = nil
+    support_dirs = []
 
-    ARGV.each do |arg|
-      if arg =~ /.*\.feature/
-        target = arg
+    Dir.glob("#{basedir}/**/*").each do |name|
+      if File.exist?(name) && File.basename(name) == 'support'
+        support_dirs << name
+        $LOAD_PATH << name
       end
     end
 
-    target = ARGV.last unless target
+    support_dirs.each do |support_dir|
+      Dir.glob("#{support_dir}/**/steps/*_steps.rb").each do |name|
+        ext = File.extname(name)
 
-    if target
-      if File.directory?(target)
-        target_dir = target
-      else
-        target_dir = File.dirname(target)
+        require name[support_dir.length+1..name.length-ext.length-1]
       end
-    else
-      target_dir = basedir
-    end
-
-    $: << File.expand_path("#{basedir}/support")
-
-    support_dir = File.expand_path("#{target_dir}/../support")
-    support_dir = File.expand_path("#{target_dir}/support") unless File.exist?(support_dir)
-
-    $: << support_dir if File.exist?(support_dir)
-
-    Dir.glob("#{support_dir}/**/steps/*_steps.rb").each do |name|
-      ext = File.extname(name)
-
-      require name[support_dir.length+1..name.length-ext.length-1]
     end
   end
 
