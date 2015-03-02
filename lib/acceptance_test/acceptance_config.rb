@@ -64,6 +64,10 @@ class AcceptanceConfig
     ENV['RESULTS_DIR'] ? detect_file(ENV['RESULTS_DIR'], name) : detect_file("acceptance_results", name)
   end
 
+  def webapp_url name=:webapp_url
+    AcceptanceTest.instance.config[name]
+  end
+
   def screenshots_dir
     AcceptanceTest.instance.config[:screenshots_dir]
   end
@@ -130,23 +134,29 @@ class AcceptanceConfig
 
     target = ARGV.last unless target
 
-    if File.directory?(target)
-      target_dir = target
+    if target
+      if File.directory?(target)
+        target_dir = target
+      else
+        target_dir = File.dirname(target)
+      end
     else
-      target_dir = File.dirname(target)
+      target_dir = basedir
     end
 
-    support_dir = "#{target_dir}/../support"
-
     $: << File.expand_path("#{basedir}/support")
-    $: << File.expand_path(support_dir)
+
+    support_dir = File.expand_path("#{target_dir}/../support")
+    support_dir = File.expand_path("#{target_dir}/support") unless File.exist?(support_dir)
+
+    $: << support_dir if File.exist?(support_dir)
 
     Dir.glob("#{support_dir}/**/steps/*_steps.rb").each do |name|
       ext = File.extname(name)
 
       require name[support_dir.length+1..name.length-ext.length-1]
     end
- end
+  end
 
   def detect_file dir, name
     ext = File.extname(name)
