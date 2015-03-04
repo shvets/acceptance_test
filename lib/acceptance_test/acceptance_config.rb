@@ -13,7 +13,8 @@ class AcceptanceConfig
   def configure workspace, app_name=nil
     @app_name = app_name
 
-    load_support_code workspace
+    support_dirs = load_code_from_support workspace
+    load_steps support_dirs
 
     acceptance_test = AcceptanceTest.instance
 
@@ -21,6 +22,10 @@ class AcceptanceConfig
 
     acceptance_config = acceptance_config_file ? HashWithIndifferentAccess.new(YAML.load_file(acceptance_config_file)) : {}
     acceptance_test.configure(acceptance_config)
+
+    if block_given?
+      yield acceptance_config
+    end
 
     RSpec.configure do |config|
       configure_turnip
@@ -128,18 +133,22 @@ class AcceptanceConfig
     File.expand_path("tmp/#{file_name}")
   end
 
-  def load_support_code basedir
+  def load_code_from_support basedir
     support_dirs = []
 
-    Dir.glob("#{basedir}/**/*").each do |name|
+    Dir["#{basedir}/**/*"].each do |name|
       if File.exist?(name) && File.basename(name) == 'support'
         support_dirs << name
         $LOAD_PATH << name
       end
     end
 
+    support_dirs
+  end
+
+  def load_steps support_dirs
     support_dirs.each do |support_dir|
-      Dir.glob("#{support_dir}/**/steps/*_steps.rb").each do |name|
+      Dir["#{support_dir}/**/steps/*_steps.rb"].each do |name|
         ext = File.extname(name)
 
         require name[support_dir.length+1..name.length-ext.length-1]
