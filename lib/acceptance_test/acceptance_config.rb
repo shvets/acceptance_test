@@ -20,8 +20,8 @@ class AcceptanceConfig
 
     acceptance_test.enable_external_source data_reader # enable external source for gherkin
 
-    config = acceptance_config_file ? HashWithIndifferentAccess.new(YAML.load_file(acceptance_config_file)) : {}
-    acceptance_test.configure(config)
+    acceptance_config = acceptance_config_file ? HashWithIndifferentAccess.new(YAML.load_file(acceptance_config_file)) : {}
+    acceptance_test.configure(acceptance_config)
 
     if block_given?
       yield acceptance_test.config
@@ -58,16 +58,28 @@ class AcceptanceConfig
     ENV['FORMAT'].nil? ? "xlsx" : ENV['FORMAT']
   end
 
+  def config_dir
+    ENV['CONFIG_DIR'] ?  ENV['CONFIG_DIR'] : "acceptance_config"
+  end
+
+  def data_dir
+    ENV['DATA_DIR'] ?  ENV['DATA_DIR'] : "acceptance_data"
+  end
+
+  def results_dir
+    ENV['RESULTS_DIR'] ?  ENV['RESULTS_DIR'] : "acceptance_results"
+  end
+
   def acceptance_config_file
-    ENV['CONFIG_FILE'] ? File.expand_path(ENV['CONFIG_FILE']) : detect_file("acceptance_config", "#{app_name}.yml")
+    detect_file(config_dir, "#{app_name}.yml")
   end
 
   def acceptance_data_file name="#{app_name}.#{format}"
-    ENV['DATA_DIR'] ? detect_file(ENV['DATA_DIR'], name) : detect_file("acceptance_data", name)
+    detect_file(data_dir, name)
   end
 
-  def acceptance_results_file name="#{app_name}.#{format}"
-    ENV['RESULTS_DIR'] ? detect_file(ENV['RESULTS_DIR'], name) : detect_file("acceptance_results", name)
+  def acceptance_results_file
+    detect_file(results_dir, "#{app_name}.#{format}")
   end
 
   def webapp_url name=:webapp_url
