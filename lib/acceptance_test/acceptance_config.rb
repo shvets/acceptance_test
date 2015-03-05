@@ -20,11 +20,11 @@ class AcceptanceConfig
 
     acceptance_test.enable_external_source data_reader # enable external source for gherkin
 
-    acceptance_config = acceptance_config_file ? HashWithIndifferentAccess.new(YAML.load_file(acceptance_config_file)) : {}
-    acceptance_test.configure(acceptance_config)
+    config = acceptance_config_file ? HashWithIndifferentAccess.new(YAML.load_file(acceptance_config_file)) : {}
+    acceptance_test.configure(config)
 
     if block_given?
-      yield acceptance_config
+      yield acceptance_test.config
     end
 
     RSpec.configure do |config|
