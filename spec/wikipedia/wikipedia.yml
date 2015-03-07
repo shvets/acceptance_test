@@ -9,7 +9,7 @@ browser: chrome
 
 driver: selenium
 
-timeout_in_seconds: 40
+timeout_in_seconds: 10
 
 #browser_binaries:
 #  firefox: /Applications/Firefox.app/Contents/MacOS/firefox-bin

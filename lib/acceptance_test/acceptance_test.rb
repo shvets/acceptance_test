@@ -118,10 +118,32 @@ class AcceptanceTest
     Turnip::Builder::Step.class_eval do
       def initialize *params
         description = params[0]
-        first_word = description[0..description.index(/\s/)]
-        first_word = downcase unless ["I ", "(I) "].include?(first_word)
+        new_description = ""
 
-        params[0] = first_word + description[first_word.size..-1].downcase
+        words = description.split(/\s/)
+
+        first_word = words.first
+
+        if ["I", "(I)"].include?(first_word)
+          new_description += first_word
+        else
+          new_description += first_word.downcase
+        end
+
+        words.delete first_word
+
+        words.each do |word|
+          new_description += " "
+
+          if word =~ /a..z|A..z|0..9/
+            new_description += word.downcase
+          else
+            new_description += word
+          end
+        end
+
+        params[0] = new_description
+
         super
       end
     end
