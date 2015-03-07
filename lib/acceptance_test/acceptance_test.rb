@@ -89,6 +89,44 @@ class AcceptanceTest
     GherkinExt.enable_external_source data_reader
   end
 
+  def configure_turnip report_file, title
+    # configure turnip formatter
+
+    require 'turnip_formatter'
+
+    RSpec.configure do |config|
+      config.add_formatter RSpecTurnipFormatter, report_file
+    end
+
+    TurnipFormatter.configure do |config|
+      config.title = title
+    end
+
+    # configure gnawrnip
+
+    Gnawrnip.configure do |c|
+      c.make_animation = true
+      c.max_frame_size = 1024 # pixel
+    end
+
+    Gnawrnip.ready!
+  end
+
+  def ignore_case_in_steps
+    require 'turnip/builder'
+
+    Turnip::Builder::Step.class_eval do
+      def initialize *params
+        description = params[0]
+        first_word = description[0..description.index(/\s/)]
+        first_word = downcase unless ["I ", "(I) "].include?(first_word)
+
+        params[0] = first_word + description[first_word.size..-1].downcase
+        super
+      end
+    end
+  end
+
   private
 
   def driver metadata
@@ -129,17 +167,4 @@ class AcceptanceTest
     ('a'..'z').to_a.shuffle[0, 12].join
   end
 
-  # def self.get_localhost
-  #   orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true  # turn off reverse DNS resolution temporarily
-  #
-  #   UDPSocket.open do |s|
-  #     s.connect '192.168.1.1', 1
-  #     s.addr.last
-  #   end
-  # ensure
-  #   Socket.do_not_reverse_lookup = orig
-  # end
-
-  # ip = `ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d ' ' -f2`.strip
-  # Capybara.app_host = http://#{ip}:#{Capybara.server_port}
 end

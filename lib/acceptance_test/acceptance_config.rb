@@ -10,15 +10,21 @@ require 'gnawrnip'
 class AcceptanceConfig
   include Singleton
 
-  def configure workspace, app_name=nil
-    @app_name = app_name
+  def configure workspace, params
+    @app_name = params[:app_name]
 
     support_dirs = load_code_from_support workspace
     load_steps support_dirs
 
     acceptance_test = AcceptanceTest.instance
 
-    acceptance_test.enable_external_source data_reader # enable external source for gherkin
+    if params[:enable_external_source]
+      data_reader = params[:data_reader] ? params[:data_reader] : default_data_reader
+
+      acceptance_test.enable_external_source data_reader # enable external source for gherkin
+    end
+
+    acceptance_test.ignore_case_in_steps if params[:ignore_case_in_steps]
 
     acceptance_config = acceptance_config_file ? HashWithIndifferentAccess.new(YAML.load_file(acceptance_config_file)) : {}
     acceptance_test.configure(acceptance_config)
@@ -28,7 +34,7 @@ class AcceptanceConfig
     end
 
     RSpec.configure do |config|
-      configure_turnip
+      acceptance_test.configure_turnip turnip_report_file, turnip_report_name
 
       config.before(:type => :feature) do |example|
         acceptance_test.setup page, example.metadata
@@ -82,6 +88,14 @@ class AcceptanceConfig
     detect_file(results_dir, "#{app_name}.#{format}")
   end
 
+  def turnip_report_file
+    File.expand_path("tmp/" + (app_name ? "#{app_name}-acceptance-report.html" : "acceptance-report.html"))
+  end
+
+  def turnip_report_name
+    "#{app_name[0].upcase+app_name[1..-1]} Acceptance"
+  end
+
   def webapp_url name=:webapp_url
     AcceptanceTest.instance.config[name]
   end
@@ -106,44 +120,23 @@ class AcceptanceConfig
     !!(AcceptanceTest.instance.config[:webapp_url] =~ /localhost/)
   end
 
+  def default_data_reader
+    lambda do |source_path|
+      path = acceptance_data_file detect_file_from_script(source_path)
+
+      puts "Reading data from: #{path}"
+
+      ext = File.extname(path)
+
+      if ext == '.csv'
+        CSV.read(File.expand_path(path))
+      elsif ext == '.yml'
+        YAML.load_file(File.expand_path(path))
+      end
+    end
+  end
+
   private
-
-  def configure_turnip
-    report_file = turnip_report_file(app_name)
-
-    configure_turnip_formatter report_file, app_name
-
-    configure_gnawrnip
-  end
-
-  def configure_turnip_formatter report_file, report_name
-    require 'turnip_formatter'
-
-    RSpec.configure do |config|
-      config.add_formatter RSpecTurnipFormatter, report_file
-    end
-
-    TurnipFormatter.configure do |config|
-      config.title = "#{report_name[0].upcase+report_name[1..-1]} Acceptance"
-    end
-  end
-
-  def configure_gnawrnip
-    Gnawrnip.configure do |c|
-      c.make_animation = true
-      c.max_frame_size = 1024 # pixel
-    end
-
-    Gnawrnip.ready!
-  end
-
-  def turnip_report_file name=nil
-    name = ENV['TURNIP_REPORT_PREFIX'] if ENV['TURNIP_REPORT_PREFIX']
-
-    file_name = name.nil? ? "acceptance-report.html" : "#{name}-acceptance-report.html"
-
-    File.expand_path("tmp/#{file_name}")
-  end
 
   def load_code_from_support basedir
     support_dirs = []
@@ -180,22 +173,6 @@ class AcceptanceConfig
     full_path2 = File.expand_path(path2)
 
     File.exist?(full_path1) ? full_path1 : full_path2
-  end
-
-  def data_reader
-    lambda do |source_path|
-      path = acceptance_data_file detect_file_from_script(source_path)
-
-      puts "Reading data from: #{path}"
-
-      ext = File.extname(path)
-
-      if ext == '.csv'
-        CSV.read(File.expand_path(path))
-      elsif ext == '.yml'
-        YAML.load_file(File.expand_path(path))
-      end
-    end
   end
 
   def detect_file_from_script source_path
