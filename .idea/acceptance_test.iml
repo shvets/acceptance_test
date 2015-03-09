@@ -297,7 +297,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v4.2.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.8.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.7.6, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara (v2.4.4, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara-firebug (v2.1.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara-webkit (v1.4.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
@@ -318,7 +318,7 @@
     <orderEntry type="library" scope="PROVIDED" name="mime-types (v2.4.3, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mini_portile (v0.6.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest (v5.5.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="multi_json (v1.10.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="multi_json (v1.11.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="multi_test (v0.1.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="nokogiri (v1.6.6.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="oily_png (v1.1.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
@@ -333,7 +333,7 @@
     <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.2.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rubyzip (v1.1.7, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="selenium-webdriver (v2.44.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="slim (v3.0.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="slim (v3.0.3, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="temple (v0.7.5, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="thread_safe (v0.3.4, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="tilt (v2.0.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />

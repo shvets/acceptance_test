@@ -136,31 +136,6 @@ class AcceptanceConfig
     end
   end
 
-  private
-
-  def load_code_from_support basedir
-    support_dirs = []
-
-    Dir["#{basedir}/**/*"].each do |name|
-      if File.exist?(name) && File.basename(name) == 'support'
-        support_dirs << name
-        $LOAD_PATH << name
-      end
-    end
-
-    support_dirs
-  end
-
-  def load_steps support_dirs
-    support_dirs.each do |support_dir|
-      Dir["#{support_dir}/**/steps/*_steps.rb"].each do |name|
-        ext = File.extname(name)
-
-        require name[support_dir.length+1..name.length-ext.length-1]
-      end
-    end
-  end
-
   def detect_file dir, name
     ext = File.extname(name)
     basename = File.basename(name)
@@ -188,4 +163,30 @@ class AcceptanceConfig
       (source_path % {acceptance_env: '', format: format})
     end
   end
+
+  private
+
+  def load_code_from_support basedir
+    support_dirs = []
+
+    Dir["#{basedir}/**/*"].each do |name|
+      if File.exist?(name) && File.basename(name) == 'support'
+        support_dirs << name
+        $LOAD_PATH << name
+      end
+    end
+
+    support_dirs
+  end
+
+  def load_steps support_dirs
+    support_dirs.each do |support_dir|
+      Dir["#{support_dir}/**/steps/*_steps.rb"].each do |name|
+        ext = File.extname(name)
+
+        require name[support_dir.length+1..name.length-ext.length-1]
+      end
+    end
+  end
+
 end
