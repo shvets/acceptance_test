@@ -83,7 +83,7 @@ class AcceptanceConfig
   def acceptance_data_file name="#{app_name}.#{format}"
     file = detect_file(upload_dir, name)
 
-    detect_file(data_dir, name) unless File.exist?(file)
+    File.exist?(file) ? file : detect_file(data_dir, name)
   end
 
   def acceptance_results_file
