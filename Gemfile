@@ -3,7 +3,7 @@ source "https://rubygems.org"
 group :development do
   gem "gemspec_deps_gen"
   gem "gemcutter"
-  gem "capybara-webkit", "~> 1.4.1"
+  gem "capybara-webkit"
 end
 
 group :default do
@@ -22,15 +22,15 @@ group :default do
 
   gem "rspec"
   gem "turnip", "~> 1.2.4"
-  gem "capybara", "~> 2.4.4"
-  gem "selenium-webdriver", "~> 2.44.0"
+  gem "capybara"
+  gem "selenium-webdriver"
   gem "capybara-firebug", "~> 2.1.0"
   gem "poltergeist", "~> 1.6.0"
 
   gem "turnip_formatter", "~> 0.3.3"
   gem "gnawrnip", "~> 0.3.2"
 
-  gem "activesupport", "~> 4.2.0"
+  gem "activesupport", "~> 4.2.1"
 
   gem "rspec-example_steps", "~> 3.0.2"
   gem "meta_methods", "~> 1.3.0"

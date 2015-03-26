@@ -295,7 +295,7 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="RVM: ruby-1.9.3-p551 [acceptance_test]" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="activesupport (v4.2.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="activesupport (v4.2.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.7.6, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara (v2.4.4, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
@@ -306,7 +306,7 @@
     <orderEntry type="library" scope="PROVIDED" name="cliver (v0.3.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="cucumber (v1.3.19, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.2.5, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="ffi (v1.9.6, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ffi (v1.9.8, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="file_utils (v1.1.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="gemcutter (v0.7.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="gemspec_deps_gen (v1.1.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
@@ -326,16 +326,16 @@
     <orderEntry type="library" scope="PROVIDED" name="rack (v1.6.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rack-test (v0.6.3, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec (v3.2.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-core (v3.2.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-core (v3.2.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-example_steps (v3.0.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v3.2.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v3.2.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.2.2, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rubyzip (v1.1.7, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="selenium-webdriver (v2.44.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="selenium-webdriver (v2.45.0, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="slim (v3.0.3, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="temple (v0.7.5, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="thread_safe (v0.3.4, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="thread_safe (v0.3.5, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="tilt (v2.0.1, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="turnip (v1.2.4, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="turnip_formatter (v0.3.3, RVM: ruby-1.9.3-p551 [acceptance_test]) [gem]" level="application" />

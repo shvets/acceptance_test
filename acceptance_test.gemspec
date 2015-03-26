@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "rspec", [">= 0"]
   spec.add_runtime_dependency "turnip", ["~> 1.2.4"]
   spec.add_runtime_dependency "capybara", ["~> 2.4.4"]
-  spec.add_runtime_dependency "selenium-webdriver", ["~> 2.44.0"]
+  spec.add_runtime_dependency "selenium-webdriver", [">= 0"]
   spec.add_runtime_dependency "capybara-firebug", ["~> 2.1.0"]
   spec.add_runtime_dependency "poltergeist", ["~> 1.6.0"]
   spec.add_runtime_dependency "turnip_formatter", ["~> 0.3.3"]
