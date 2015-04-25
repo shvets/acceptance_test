@@ -17,9 +17,9 @@ class AcceptanceTest
 
     @config = HashWithIndifferentAccess.new
 
-    @config[:browser] = 'firefox'
+    @config[:browser] = ENV['BROWSER'] || 'firefox'
     @config[:screenshots_dir] = File.expand_path('tmp')
-    @config[:timeout_in_seconds] = 20
+    @config[:timeout_in_seconds] = ENV['TIMEOUT_IN_SECONDS'] || 20
 
     @screenshot_maker = ScreenshotMaker.new config[:screenshots_dir]
 

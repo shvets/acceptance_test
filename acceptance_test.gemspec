@@ -18,18 +18,18 @@ Gem::Specification.new do |spec|
   
   spec.add_runtime_dependency "rspec", [">= 0"]
   spec.add_runtime_dependency "turnip", ["~> 1.2.4"]
-  spec.add_runtime_dependency "capybara", ["~> 2.4.4"]
+  spec.add_runtime_dependency "capybara", [">= 0"]
   spec.add_runtime_dependency "selenium-webdriver", [">= 0"]
   spec.add_runtime_dependency "capybara-firebug", ["~> 2.1.0"]
   spec.add_runtime_dependency "poltergeist", ["~> 1.6.0"]
   spec.add_runtime_dependency "turnip_formatter", ["~> 0.3.3"]
   spec.add_runtime_dependency "gnawrnip", ["~> 0.3.2"]
-  spec.add_runtime_dependency "activesupport", ["~> 4.2.0"]
+  spec.add_runtime_dependency "activesupport", ["~> 4.2.1"]
   spec.add_runtime_dependency "rspec-example_steps", ["~> 3.0.2"]
   spec.add_runtime_dependency "meta_methods", ["~> 1.3.0"]
   spec.add_development_dependency "gemspec_deps_gen", [">= 0"]
   spec.add_development_dependency "gemcutter", [">= 0"]
-  spec.add_development_dependency "capybara-webkit", ["~> 1.4.1"]
+  spec.add_development_dependency "capybara-webkit", [">= 0"]
 
 end
 
