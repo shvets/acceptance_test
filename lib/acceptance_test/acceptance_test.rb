@@ -43,7 +43,7 @@ class AcceptanceTest
     Capybara.app_host = config[:webapp_url]
 
     Capybara.configure do |conf|
-      conf.default_wait_time = config[:timeout_in_seconds]
+      conf.default_wait_time = config[:timeout_in_seconds].to_i
 
       conf.match = :first
 
@@ -69,8 +69,8 @@ class AcceptanceTest
       conf.default_wait_time = 2
     end
 
-    Capybara.current_driver = Capybara.default_driver
-    Capybara.javascript_driver = Capybara.default_driver
+    # Capybara.current_driver = Capybara.default_driver
+    # Capybara.javascript_driver = Capybara.default_driver
   end
 
   def create_shared_context name
